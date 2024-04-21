@@ -1,0 +1,30 @@
+// 這邊是自訂的東西可以用
+$MetaWall_white: white;
+$MataWall_gray01: #EFECE7;
+$MataWall_gray02: #E0E0E0;
+$MataWall_gray03: #9B9893;
+$MataWall_gray04: #707070;
+$MataWall_black: #000400;
+$MataWall_blue: #03438D;
+
+body {
+    font-family: "Noto Sans TC", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+  }
+  
+.btn.MetaWall_button{
+    width: 100%;
+    background-color: $MataWall_blue;
+    color: $MetaWall_white;
+}
+
+.MetaWall_input{
+    width: 100%;
+    border: $MataWall_black solid 3px;
+    padding: 0.3rem 1rem;
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    border: 2px solid #000400;
+    opacity: 1;
+}
