@@ -39,6 +39,9 @@ export default {
 <style lang="scss" scoped>
 .user{
     cursor: pointer;
+    .userName{
+      border-bottom: solid 2px $MataWall_black;
+    }
 }
 .navbar{
     background-color: $MetaWall_white;

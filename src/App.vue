@@ -14,6 +14,7 @@ export default {
 body {
   display: grid;
   background-color: $MataWall_gray01;
+  position: relative;
   &::before {
       content: '';
       position: absolute;
