@@ -12,12 +12,35 @@ body {
     font-optical-sizing: auto;
     font-weight: 600;
     font-style: normal;
+    color: $MataWall_black;
   }
   
 .btn.MetaWall_button{
     width: 100%;
     background-color: $MataWall_blue;
+    border: solid 2px $MataWall_black;
     color: $MetaWall_white;
+    box-shadow: -2px 2px $MataWall_black;
+    transition: scale 0.1s ease-in-out;
+    &:hover{
+      scale: 1.03;
+    }
+    &:active{
+        scale: 0.98;
+    }
+}
+
+.routerLink{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration:none;
+    margin: 0.5rem 0;
+    transition: color 0.1s ease-in-out;
+    color: $MataWall_black;
+    &:hover{
+        color: $MataWall_blue;
+    }
 }
 
 .MetaWall_input{
