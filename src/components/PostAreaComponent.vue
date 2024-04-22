@@ -2,7 +2,7 @@
  <section class="my-3 p-4">
     <div>
         <div class="user d-flex align-items-center">
-            <div class="imgContainer mx-1">
+            <div class="imgContainer mx-1" style="width: 45px;height: 45px;">
                 <img class="img-fluid" src="../../public/userPhotoDefault.svg" alt="userPhoto">
             </div>
             <div class="userName">
@@ -10,22 +10,37 @@
               <div class="date">2024/04/22</div>
             </div>
         </div>
-        <div class="content mt-3">大家好 今天的天氣好冷</div>
-        <div class="postImg mt-3">
+        <div class="content my-3">大家好 今天的天氣好冷</div>
+        <div class="postImg my-3">
           <img src="https://images.unsplash.com/photo-1713687070911-8c89cece491d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="userPhoto">
         </div>
-        <div class="like mt-3"><i class="bi bi-hand-thumbs-up custom-thumbs"></i>
+        <div class="like my-3"><i class="bi bi-hand-thumbs-up custom-thumbs"></i>
           <i class="bi bi-hand-thumbs-up-fill custom-thumbs"></i>
           15
         </div>
-        <div class="toMessage d-flex align-items-center mt-3">
+        <div class="toMessage d-flex align-items-center my-3">
             <div class="imgContainer mx-1">
                 <img class="img-fluid" src="../../public/userPhotoDefault.svg" alt="userPhoto">
             </div>
             <div class="input-group">
               <input type="text" class="form-control h-100" placeholder="留言...">
-              <button class="btn btn-secondary" type="button"><i class="bi bi-search"></i></button>
+              <button class="btn btn-secondary MetaWall_button px-5"
+              type="button">留言</button>
             </div>
+        </div>
+        <div class="posted position-relative my-3 p-3">
+          <div class="user content d-flex align-items-center">
+            <div class="imgContainer mx-1">
+                <img class="img-fluid" src="../../public/userPhotoDefault.svg" alt="userPhoto">
+            </div>
+            <div class="userName">
+              AAA<br>
+              <div class="date">2024/04/22</div>
+            </div>
+          </div>
+          <div class="position-relative" style="left: 40px;">
+            真的非常的好
+          </div>
         </div>
     </div>
  </section>
@@ -70,8 +85,8 @@ section{
 .imgContainer{
     border: solid 2px $MataWall_black;
     border-radius: 50%;
-    width: 45px;
-    height: 45px;
+    width: 40px;
+    height: 40px;
     overflow: hidden;
 }
 
@@ -93,10 +108,6 @@ section{
 }
 
 .toMessage{
-  .imgContainer{
-    width: 40px;
-    height: 40px;
-  }
   .input-group{
     width: 0;
     flex-grow: 7;
@@ -115,6 +126,10 @@ section{
       color: $MetaWall_white;
     }
   }
+}
+
+.posted{
+  background-color: $MataWall_gray01;
 }
 
 </style>

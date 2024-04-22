@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-light mb-1">
+  <nav class="navbar navbar-light position-sticky top-0 mb-1">
     <div class="container">
         <router-link class="routerLink navbar-brand m-0" to="community">
             <h4 class="logo text-center">MetaWall</h4>
@@ -37,6 +37,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+nav{
+  z-index: 10;
+}
+
 .user{
     cursor: pointer;
     .userName{

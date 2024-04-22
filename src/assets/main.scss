@@ -5,7 +5,9 @@ $MataWall_gray02: #E0E0E0;
 $MataWall_gray03: #9B9893;
 $MataWall_gray04: #707070;
 $MataWall_black: #000400;
+$MetaWall_lightBlue:#E2EDFA;
 $MataWall_blue: #03438D;
+$MataWall_yellow: #EEC32A;
 
 body {
     font-family: "Noto Sans TC", sans-serif;
@@ -16,18 +18,17 @@ body {
   }
   
 .btn.MetaWall_button{
-    width: 100%;
     background-color: $MataWall_blue;
     border: solid 2px $MataWall_black;
     color: $MetaWall_white;
-    box-shadow: -2px 2px $MataWall_black;
     transition: scale 0.1s ease-in-out;
     &:hover{
-      scale: 1.03;
+      background-color: $MataWall_yellow;
+      color: $MataWall_black;
     }
-    &:active{
-        scale: 0.98;
-    }
+}
+.btnShdow{
+    box-shadow: -2px 2px $MataWall_black;
 }
 
 .routerLink{

@@ -13,7 +13,7 @@
           <input class="MetaWall_input my-1" type="text" placeholder="暱稱">
           <input class="MetaWall_input my-1" type="email" placeholder="Email">
           <input class="MetaWall_input my-1" type="password" placeholder="Password">
-          <button class="btn MetaWall_button mt-2" type="button">註冊</button>
+          <button class="btn MetaWall_button btnShdow mt-2" type="button">註冊</button>
           <router-link class="routerLink" to="login">
             登入
           </router-link>
