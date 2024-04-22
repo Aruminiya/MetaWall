@@ -13,7 +13,9 @@
           <input class="MetaWall_input my-1" type="email" placeholder="Email">
           <input class="MetaWall_input my-1" type="password" placeholder="Password">
           <button class="btn MetaWall_button mt-2" type="button">登入</button>
-          <button class="btn mt-2" type="button">註冊</button>
+          <router-link to="signup">
+            <button class="btn mt-2" type="button">註冊</button>
+          </router-link>
         </form>
       </div>
     </section>
