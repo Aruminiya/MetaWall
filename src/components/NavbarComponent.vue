@@ -6,7 +6,7 @@
         </router-link>
         <div class="user d-flex">
             <div class="imgContainer mx-1">
-                <img class="img-fluid" src="../../public/userPhotoDefault.svg" alt="userPhoto">
+                <img src="../../public/userPhotoDefault.svg" alt="userPhoto">
             </div>
             <div class="userName">{{ userName }}</div>
         </div>
@@ -57,6 +57,11 @@ nav{
     width: 30px;
     height: 30px;
     overflow: hidden;
+    img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
 }
 
 .logo{
