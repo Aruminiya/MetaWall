@@ -31,6 +31,11 @@ const routes = [
         name: 'ModifyPersonal',
         component: () => import('../components/ModifyPersonalComponent.vue'),
       },
+      {
+        path: 'createPost',
+        name: 'CreatePost',
+        component: () => import('../components/CreatePostComponent.vue'),
+      },
     ],
   },
 ];
