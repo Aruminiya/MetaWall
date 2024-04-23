@@ -21,6 +21,7 @@ body {
       top: 0;
       left: 0;
       width: 100%;
+      min-height: 100vh;
       height: 100%;
       opacity: 0.2;
       background-image: linear-gradient(90deg, $MataWall_gray04 1px, transparent 0),
