@@ -34,6 +34,24 @@
       </div>
     </div>
   </div>
+  <div class="phonePanel d-md-none d-block position-fixed">
+        <section class="mx-4">
+          <div class="phonePanelBtns d-flex justify-content-around align-items-center">
+            <button class="phonePanelBtn btn MetaWall_button my-2" type="button">
+              <i class="bi bi-house-door"></i>
+            </button>
+            <button class="phonePanelBtn btn MetaWall_button my-2" type="button">
+              <i class="bi bi-bell"></i>
+            </button>
+            <button class="phonePanelBtn btn MetaWall_button my-2" type="button">
+              <i class="bi bi-hand-thumbs-up"></i>
+            </button>
+            <button class="phonePanelBtn btn MetaWall_button my-2" type="button">
+              <i class="bi bi-plus"></i>
+            </button>
+          </div>
+        </section>
+      </div>
 </template>
 
 <script>
@@ -74,6 +92,19 @@ export default {
       height: 100%;
       object-fit: cover;
     }
+}
+.phonePanel{
+  z-index: 10;
+  bottom: 30px;
+  width: 100%;
+}
+.phonePanelBtns{
+  border: solid 2px $MataWall_black;
+  border-radius: 3rem;
+  background-color: $MataWall_gray02;
+  .phonePanelBtn{
+  border-radius:50% ;
+}
 }
 
 </style>
