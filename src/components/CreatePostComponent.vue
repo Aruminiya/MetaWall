@@ -9,7 +9,7 @@
         <textarea name="content" id="content"></textarea>
       </div>
       <div class="image mt-1">
-        <label for="upLoadimage" class="upLoadimage my-1 px-4 py-1">上傳圖片</label>
+        <label for="upLoadimage" class="upLoadimage my-3 px-4 py-1">上傳圖片</label>
         <input id="upLoadimage" class="d-none" type="file">
       </div>
       <div v-if="image !== ''" class="imgContainer mx-1">

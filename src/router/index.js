@@ -36,6 +36,11 @@ const routes = [
         name: 'CreatePost',
         component: () => import('../components/CreatePostComponent.vue'),
       },
+      {
+        path: 'likePosts',
+        name: 'LikePosts',
+        component: () => import('../components/LikePostsComponent.vue'),
+      },
     ],
   },
 ];
