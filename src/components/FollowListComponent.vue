@@ -1,8 +1,8 @@
 <template>
-  <section class="title position-relative d-flex justify-content-center align-items-center">
+  <section class="title position-relative d-flex justify-content-center align-items-center mb-5">
     <h3>追蹤名單</h3>
   </section>
-  <section class="mt-5">
+  <section>
     <div v-for="people in follwer" :key="people._id">
       <div class="follwer d-flex px-3 py-5 mt-3 position-relative">
       <div class="user d-flex align-items-center">

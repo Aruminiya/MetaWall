@@ -11,7 +11,7 @@
           <div class="p-3">
             <div class="d-flex align-items-center">
               <div class="imgContainer mx-1 my-2 me-3">
-                  <img class="img-fluid" src="../../public/userPhotoDefault.svg" alt="userPhoto">
+                  <img src="../../public/userPhotoDefault.svg" alt="userPhoto">
               </div>
               Leo
             </div>
@@ -69,6 +69,11 @@ export default {
     width: 50px;
     height: 50px;
     overflow: hidden;
+    img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
 }
 
 </style>

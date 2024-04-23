@@ -26,6 +26,11 @@ const routes = [
         name: 'FollowList',
         component: () => import('../components/FollowListComponent.vue'),
       },
+      {
+        path: 'modifyPersonal',
+        name: 'ModifyPersonal',
+        component: () => import('../components/ModifyPersonalComponent.vue'),
+      },
     ],
   },
 ];
