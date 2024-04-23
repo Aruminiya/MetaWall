@@ -15,6 +15,11 @@
       <div v-if="image !== ''" class="imgContainer mx-1">
         <img :src="image" alt="photo">
       </div>
+      <div class="d-flex flex-column justify-content-center align-items-center">
+        <button type="button" class="createPostBtn
+        btn MetaWall_button btnShdow my-4 px-4">送出貼文</button>
+      </div>
+
     </div>
   </section>
 </template>
@@ -61,5 +66,10 @@ textarea{
     max-height: 70vh;
     object-fit: contain;
   }
+}
+
+.createPostBtn{
+  width: 60%;
+  height: 50px;
 }
 </style>
