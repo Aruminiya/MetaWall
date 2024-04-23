@@ -2,10 +2,10 @@
     <div class="container">
       <div class="row">
         <div class="col-8">
-            Column
+            Column 01
         </div>
         <div class="col-4">
-            Column
+            Column 02
         </div>
       </div>
     </div>
