@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-light position-sticky top-0 mb-1">
     <div class="container">
-        <router-link class="routerLink navbar-brand m-0" to="community">
+        <router-link class="routerLink navbar-brand m-0" to="/community/postArea">
             <h4 class="logo text-center">MetaWall</h4>
         </router-link>
         <div class="user d-flex">
