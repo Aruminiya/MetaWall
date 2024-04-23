@@ -15,7 +15,6 @@ const routes = [
     path: '/community',
     name: 'Community',
     component: () => import('../views/CommunityView.vue'),
-
     children: [
       {
         path: 'postArea',
