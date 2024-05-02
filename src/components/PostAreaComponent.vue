@@ -20,16 +20,18 @@
         </div>
         <div class="userName">
           {{post.user.name}}<br>
-          <div class="date">{{post.createdAt}}</div>
+          <div class="date">{{post.createdAt.split(/(T|\.)/)[0]}}
+            &nbsp;{{post.createdAt.split(/(T|\.)/)[2]}}</div>
         </div>
     </div>
     <div class="content my-3">{{post.content}}</div>
     <div class="postImg my-3">
       <img :src="post.image" alt="postImg">
     </div>
-    <div class="like my-3"><i class="bi bi-hand-thumbs-up custom-thumbs"></i>
-      <i class="bi bi-hand-thumbs-up-fill custom-thumbs"></i>
-      {{post.like}}
+    <div class="like my-3">
+      <i v-if="post.likes" class="bi bi-hand-thumbs-up-fill custom-thumbs"></i>
+      <i v-else class="bi bi-hand-thumbs-up custom-thumbs"></i>
+      {{post.likes}}
     </div>
     <div class="toMessage d-flex align-items-center my-3">
         <div class="imgContainer mx-1">
@@ -45,14 +47,15 @@
       <div class="posted position-relative my-3 p-3">
         <div class="user content d-flex align-comments-center">
           <div class="imgContainer mx-1">
-              <img class="img-fluid" :src="comment.photo" alt="userPhoto">
+              <img class="img-fluid" :src="comment?.user?.photo" alt="userPhoto">
           </div>
-          <div class="userName">
+          <div class="userName mb-1">
             {{comment?.user?.name}}<br>
-            <div class="date">{{comment?.user?.createdAt}}</div>
+            <div class="date">{{comment.createdAt.split(/(T|\.)/)[0]}}
+            &nbsp;{{comment.createdAt.split(/(T|\.)/)[2]}}</div>
           </div>
         </div>
-        <div class="position-relative" style="left: 40px;">
+        <div class="position-relative" style="left: 46px;">
           {{comment.content}}
         </div>
       </div>
