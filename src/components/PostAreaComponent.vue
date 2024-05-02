@@ -1,4 +1,5 @@
 <template>
+  <!-- {{ posts?.data?.data }} -->
   <section class="userControl d-flex">
     <select class="form-select flex-grow-2 custom-select me-3" name="filter">
       <option value="asc" selected>最新貼文</option>
@@ -12,13 +13,13 @@
       type="button"><i class="bi bi-search"></i></button>
     </div>
   </section>
-  <section class="postArea my-3 p-4">
+  <section v-for="post in posts?.data?.data" :key="post._id" class="postArea my-3 p-4">
     <div class="user d-flex align-items-center">
         <div class="imgContainer mx-1" style="width: 45px;height: 45px;">
             <img :src="postData.photo" alt="userPhoto">
         </div>
         <div class="userName">
-          Leo<br>
+          {{post.user.email}}<br>
           <div class="date">2024/04/22</div>
         </div>
     </div>
@@ -60,6 +61,8 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'pinia';
+import posts from '../stores/posts';
 
 export default {
   data() {
@@ -92,13 +95,13 @@ export default {
     };
   },
   computed: {
-
+    ...mapState(posts, ['posts']),
   },
   methods: {
-
+    ...mapActions(posts, ['getPosts']),
   },
   mounted() {
-
+    this.getPosts();
   },
 
 };
