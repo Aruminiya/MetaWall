@@ -16,24 +16,24 @@
   <section v-for="post in posts?.data?.data" :key="post._id" class="postArea my-3 p-4">
     <div class="user d-flex align-items-center">
         <div class="imgContainer mx-1" style="width: 45px;height: 45px;">
-            <img :src="postData.photo" alt="userPhoto">
+            <img :src="post.user.photo" alt="userPhoto">
         </div>
         <div class="userName">
-          {{post.user.email}}<br>
-          <div class="date">2024/04/22</div>
+          {{post.user.name}}<br>
+          <div class="date">{{post.createdAt}}</div>
         </div>
     </div>
-    <div class="content my-3">大家好 今天的天氣好冷</div>
+    <div class="content my-3">{{post.content}}</div>
     <div class="postImg my-3">
-      <img src="https://images.unsplash.com/photo-1713687070911-8c89cece491d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="userPhoto">
+      <img :src="post.image" alt="postImg">
     </div>
     <div class="like my-3"><i class="bi bi-hand-thumbs-up custom-thumbs"></i>
       <i class="bi bi-hand-thumbs-up-fill custom-thumbs"></i>
-      15
+      {{post.like}}
     </div>
     <div class="toMessage d-flex align-items-center my-3">
         <div class="imgContainer mx-1">
-            <img src="../../public/userPhotoDefault.svg" alt="userPhoto">
+            <img :src="post.user.photo" alt="userPhoto">
         </div>
         <div class="input-group">
           <input type="text" class="form-control h-100" placeholder="留言...">
@@ -41,19 +41,19 @@
           type="button">留言</button>
         </div>
     </div>
-    <div v-for="item in postData.comment" :key="item._id">
+    <div v-for="comment in post.comments" :key="comment._id">
       <div class="posted position-relative my-3 p-3">
-        <div class="user content d-flex align-items-center">
+        <div class="user content d-flex align-comments-center">
           <div class="imgContainer mx-1">
-              <img class="img-fluid" :src="item.photo" alt="userPhoto">
+              <img class="img-fluid" :src="comment.photo" alt="userPhoto">
           </div>
           <div class="userName">
-            {{item.name}}<br>
-            <div class="date">{{item.date}}</div>
+            {{comment?.user?.name}}<br>
+            <div class="date">{{comment?.user?.createdAt}}</div>
           </div>
         </div>
         <div class="position-relative" style="left: 40px;">
-          {{item.content}}
+          {{comment.content}}
         </div>
       </div>
     </div>
