@@ -32,20 +32,14 @@
             ></v-field>
             <error-message name="密碼" class="invalid-feedback"></error-message>
 
-            <button class="btn MetaWall_button btnShdow mt-2" type="submit">登入</button>
+            <button class="btn MetaWall_button btnShdow mt-2" type="submit"
+            :disabled="isLogin">登入</button>
             <router-link class="routerLink" to="signup">
               註冊帳號
             </router-link>
-        </v-form>
 
-        <!-- <form class="d-flex flex-column">
-          <input class="MetaWall_input my-1" type="email" placeholder="Email">
-          <input class="MetaWall_input my-1" type="password" placeholder="Password">
-          <button class="btn MetaWall_button btnShdow mt-2" type="button">登入</button>
-          <router-link class="routerLink" to="signup">
-            註冊帳號
-          </router-link>
-        </form> -->
+            <p class="errorMessage text-center">{{ errorMessage }}</p>
+        </v-form>
       </div>
     </section>
   </main>
@@ -82,15 +76,35 @@ export default {
   },
   data() {
     return {
+      isLogin: false,
       user: {
         email: '',
         password: '',
       },
+      errorMessage: '',
     };
   },
   methods: {
-    onSubmit() {
-      console.log(this.user);
+    async onSubmit() {
+      this.isLogin = true;
+      this.errorMessage = '';
+      try {
+        const loginUser = await this.axios.post(`${import.meta.env.VITE_HOST}/users/logIn`, this.user);
+        const { token } = loginUser.data;
+
+        // 設定有效期為一個禮拜
+        const expiresDate = new Date();
+        expiresDate.setDate(expiresDate.getDate() + 7);
+
+        // 將 token 存入 cookie，設定有效期為一個禮拜
+        document.cookie = `MetaWall_user_token=${token}; expires=${expiresDate.toUTCString()}; path=/`;
+
+        this.$router.push('/community/postArea');
+        this.isLogin = false;
+      } catch (err) {
+        this.errorMessage = `登入失敗：${err?.response?.data?.message}`;
+        this.isLogin = false;
+      }
     },
   },
 };
@@ -127,6 +141,10 @@ section{
        }
     }
   }
+}
+
+.errorMessage{
+  color: $MataWall_red;
 }
 
 </style>

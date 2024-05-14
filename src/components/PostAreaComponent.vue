@@ -31,7 +31,6 @@
     <div class="like my-3">
       <i v-if="post.likes" class="bi bi-hand-thumbs-up-fill custom-thumbs"></i>
       <i v-else class="bi bi-hand-thumbs-up custom-thumbs"></i>
-      {{post.likes}}
     </div>
     <div class="toMessage d-flex align-items-center my-3">
         <div class="imgContainer mx-1">

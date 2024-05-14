@@ -66,10 +66,13 @@
               <error-message name="性別" class="invalid-feedback"></error-message>
             </div>
 
-            <button class="btn MetaWall_button btnShdow mt-2" type="submit">註冊</button>
+            <button class="btn MetaWall_button btnShdow mt-2" type="submit"
+            :disabled="isLogin">註冊</button>
             <router-link class="routerLink" to="login">
               登入帳號
             </router-link>
+
+            <p class="errorMessage text-center">{{ errorMessage }}</p>
           </v-form>
       </div>
     </section>
@@ -107,6 +110,7 @@ export default {
   },
   data() {
     return {
+      isLogin: false,
       user: {
         name: '',
         email: '',
@@ -114,11 +118,22 @@ export default {
         password: '',
         photo: '../../public/userPhotoDefault.svg',
       },
+      errorMessage: '',
     };
   },
   methods: {
-    onSubmit() {
-      console.log(this.user);
+    async onSubmit() {
+      this.isLogin = true;
+      this.errorMessage = '';
+      try {
+        await this.axios.post(`${import.meta.env.VITE_HOST}/users/signUp`, this.user);
+
+        this.$router.push('/login');
+        this.isLogin = false;
+      } catch (err) {
+        this.errorMessage = `註冊失敗：${err?.response?.data?.message}`;
+        this.isLogin = false;
+      }
     },
   },
 };
@@ -155,6 +170,10 @@ section{
        }
     }
   }
+}
+
+.errorMessage{
+  color: $MataWall_red;
 }
 
 </style>
