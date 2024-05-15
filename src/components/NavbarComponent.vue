@@ -6,31 +6,22 @@
         </router-link>
         <div class="user d-flex">
             <div class="imgContainer mx-1">
-                <img src="../../public/userPhotoDefault.svg" alt="userPhoto">
+                <img :src="currentUser.photo" alt="userPhoto">
             </div>
-            <div class="userName">{{ userName }}</div>
+            <div class="userName">{{ currentUser.name }}</div>
         </div>
     </div>
   </nav>
 </template>
 
 <script>
-
 export default {
   name: 'NavbarComponent',
-  data() {
-    return {
-      userName: 'Leo',
-    };
-  },
-  computed: {
-
-  },
-  methods: {
-
-  },
-  mounted() {
-
+  props: {
+    currentUser: {
+      type: Object,
+      required: true,
+    },
   },
 
 };

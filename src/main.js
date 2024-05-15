@@ -14,15 +14,15 @@ import App from './App.vue';
 import router from './router';
 
 // 其他 Pinia Store
-import isAuthStore from './stores/isAuthStore';
+import usersStore from './stores/usersStore';
 
 const app = createApp(App);
 app.use(VueAxios, axios);
 app.use(createPinia());
 app.use(router);
 
-// 調用 isAuthStore 中的商業邏輯
-const { toAuth } = isAuthStore();
+// 調用 usersStore 中的商業邏輯
+const { toAuth } = usersStore();
 
 router.beforeEach(async (to) => {
   // 如果目標路由是 login 或 signup，不進行驗證

@@ -1,16 +1,18 @@
 <template>
   <!-- {{ posts?.data?.data }} -->
   <section class="userControl d-flex">
-    <select class="form-select flex-grow-2 custom-select me-3" name="filter">
-      <option value="asc" selected>最新貼文</option>
-      <option value="desc">最舊貼文</option>
-      <option value="mostLike">最多讚數</option>
-      <option value="leastLike">最少讚數</option>
+    <select class="form-select flex-grow-2 custom-select me-3" name="filter"
+    v-model="filterOption" @change="this.getPosts(searchKeyWord,filterOption)">
+      <option value="newToOld" selected>最新貼文</option>
+      <option value="oldToNew">最舊貼文</option>
+      <option value="leastLikes">最多讚數</option>
+      <option value="mostLikes">最少讚數</option>
     </select>
     <div class="input-group">
-      <input type="text" class="form-control h-100" placeholder="搜尋貼文">
+      <input type="text" class="form-control h-100" placeholder="搜尋貼文" v-model="searchKeyWord">
       <button class="btn btn-secondary MetaWall_button"
-      type="button"><i class="bi bi-search"></i></button>
+      type="button" @click="this.getPosts(searchKeyWord,filterOption);">
+      <i class="bi bi-search"></i></button>
     </div>
   </section>
   <section v-for="post in posts?.data?.data" :key="post._id" class="postArea my-3 p-4">
@@ -31,6 +33,7 @@
     <div class="like my-3">
       <i v-if="post.likes" class="bi bi-hand-thumbs-up-fill custom-thumbs"></i>
       <i v-else class="bi bi-hand-thumbs-up custom-thumbs"></i>
+      {{ post.likes.length }}
     </div>
     <div class="toMessage d-flex align-items-center my-3">
         <div class="imgContainer mx-1">
@@ -69,31 +72,8 @@ import postsStore from '../stores/postsStore';
 export default {
   data() {
     return {
-      postData: {
-        _id: '6614ee8ba237680be218c792',
-        name: '吳伊甫',
-        photo: 'https://images.unsplash.com/photo-1564564321837-a57b7070ac4f?q=80&w=2076&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        date: '2024/04/21',
-        content: '大家好 今天的天氣好冷 !',
-        image: 'https://images.unsplash.com/photo-1713687070911-8c89cece491d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        like: 15,
-        comment: [
-          {
-            _id: '662369099b417763bd588434',
-            name: '林木水',
-            photo: 'https://images.unsplash.com/photo-1607990281513-2c110a25bd8c?q=80&w=1868&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-            date: '2024/04/22',
-            content: '真的 已經要秋天了',
-          },
-          {
-            _id: '662365e662f7a88edae70a40',
-            name: '孫秋賢',
-            photo: 'https://images.unsplash.com/photo-1605462863863-10d9e47e15ee?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-            date: '2024/04/23',
-            content: '可以開始穿大衣了',
-          },
-        ],
-      },
+      searchKeyWord: '',
+      filterOption: 'newToOld',
     };
   },
   computed: {

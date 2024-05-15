@@ -1,5 +1,5 @@
 <template>
-  <NavbarComponent/>
+  <NavbarComponent :currentUser="currentUser"/>
   <div class="container">
     <div class="row mt-5 h-100 position-relative">
       <div class="col-md-8 col-12">
@@ -7,22 +7,24 @@
       </div>
       <div class="col-4 d-md-block d-none">
         <section class="panel p-3">
-          <button class="btn MetaWall_button btnShdow w-100 mt-2" type="button">張貼動態</button>
+          <router-link to="/community/createPost">
+            <button class="btn MetaWall_button btnShdow w-100 mt-2" type="button">張貼動態</button>
+          </router-link>
           <div class="p-3">
-            <div class="d-flex align-items-center">
+            <div class="panelBtn d-flex align-items-center">
               <div class="imgContainer mx-1 my-2 me-3">
-                  <img src="../../public/userPhotoDefault.svg" alt="userPhoto">
+                  <img :src="currentUser.photo" alt="userPhoto">
               </div>
-              Leo
+              {{currentUser.name}}
             </div>
-            <div class="d-flex align-items-center">
+            <div class="panelBtn d-flex align-items-center">
               <div class="icon imgContainer d-flex justify-content-center
               align-items-center mx-1 my-2 me-3">
                 <i class="bi bi-bell" style="font-size: 30px;"></i>
               </div>
               追蹤名單
             </div>
-            <div class="d-flex align-items-center">
+            <div class="panelBtn d-flex align-items-center">
               <div class="icon imgContainer d-flex justify-content-center
               align-items-center mx-1 my-2 me-3">
                 <i class="bi bi-hand-thumbs-up" style="font-size: 30px;"></i>
@@ -55,6 +57,9 @@
 </template>
 
 <script>
+import { mapState } from 'pinia';
+import usersStore from '../stores/usersStore';
+
 import NavbarComponent from '../components/NavbarComponent.vue';
 
 export default {
@@ -63,6 +68,9 @@ export default {
     return {
       postData: [1, 2, 3],
     };
+  },
+  computed: {
+    ...mapState(usersStore, ['currentUser']),
   },
 };
 </script>
@@ -75,6 +83,9 @@ export default {
   height: 336px;
   position: sticky;
   top: 80px;
+  .panelBtn{
+    cursor: pointer;
+  }
 }
 
 .icon{
