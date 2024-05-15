@@ -32,10 +32,14 @@
     <div class="postImg my-3">
       <img :src="post.image" alt="postImg">
     </div>
-    <div class="like my-3">
-      <i v-if="post.likes" class="bi bi-hand-thumbs-up-fill custom-thumbs"></i>
+    <div class="like my-3 d-flex">
+      <i v-if="isLikeHaveMe(post,currentUser._id)"
+      class="bi bi-hand-thumbs-up-fill custom-thumbs"></i>
       <i v-else class="bi bi-hand-thumbs-up custom-thumbs"></i>
-      {{ post.likes.length }}
+      <p class="mb-0 ml-1"
+      v-if="isLikeHaveMe(post,currentUser._id)">您與其他 {{ post.likes.length - 1 }} 位按讚</p>
+      <p class="mb-0 ml-1"
+      v-else>{{ post.likes.length }} 位按讚</p>
     </div>
     <div class="toMessage d-flex align-items-center my-3">
         <div class="imgContainer mx-1">
@@ -70,6 +74,7 @@
 <script>
 import { mapActions, mapState } from 'pinia';
 import postsStore from '../stores/postsStore';
+import usersStore from '../stores/usersStore';
 
 export default {
   data() {
@@ -80,9 +85,15 @@ export default {
   },
   computed: {
     ...mapState(postsStore, ['posts']),
+    ...mapState(usersStore, ['currentUser']),
   },
   methods: {
     ...mapActions(postsStore, ['getPosts']),
+    isLikeHaveMe(post, userId) {
+      // 檢查 "likes" 數組是否有任何一個元素滿足指定條件
+      // eslint-disable-next-line no-underscore-dangle
+      return post.likes.some((like) => like._id === userId);
+    },
   },
   mounted() {
     this.getPosts();
