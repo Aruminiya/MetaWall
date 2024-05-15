@@ -11,26 +11,27 @@
             <button class="btn MetaWall_button btnShdow w-100 mt-2" type="button">張貼動態</button>
           </router-link>
           <div class="p-3">
-            <div class="panelBtn d-flex align-items-center">
+            <router-link to="/community/personlWall"
+             class="panelBtn d-flex align-items-center">
               <div class="imgContainer mx-1 my-2 me-3">
                   <img :src="currentUser.photo" alt="userPhoto">
               </div>
-              {{currentUser.name}}
-            </div>
-            <div class="panelBtn d-flex align-items-center">
+              <p class="m-0">{{currentUser.name}}</p>
+            </router-link>
+            <router-link to="/community/followList" class="panelBtn d-flex align-items-center">
               <div class="icon imgContainer d-flex justify-content-center
               align-items-center mx-1 my-2 me-3">
                 <i class="bi bi-bell" style="font-size: 30px;"></i>
               </div>
-              追蹤名單
-            </div>
-            <div class="panelBtn d-flex align-items-center">
+              <p class="m-0">追蹤名單</p>
+            </router-link>
+            <router-link to="/community/likePosts" class="panelBtn d-flex align-items-center">
               <div class="icon imgContainer d-flex justify-content-center
               align-items-center mx-1 my-2 me-3">
                 <i class="bi bi-hand-thumbs-up" style="font-size: 30px;"></i>
               </div>
-              按讚名單
-            </div>
+              <p class="m-0">按讚名單</p>
+            </router-link>
           </div>
         </section>
       </div>
@@ -85,6 +86,18 @@ export default {
   top: 80px;
   .panelBtn{
     cursor: pointer;
+    &:hover {
+      p{
+        transition: all 0.1s ease-in-out ;
+        color: $MataWall_blue;
+        border-bottom: solid 2px $MataWall_blue;
+      }
+      .icon{
+        transition: all 0.1s ease-in-out ;
+        background-color: $MataWall_blue;
+        color: $MetaWall_white;
+      }
+    }
   }
 }
 

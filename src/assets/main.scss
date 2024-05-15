@@ -17,6 +17,12 @@ body {
     font-style: normal;
     color: $MataWall_black;
   }
+
+  a {
+    color: inherit; /* 重置文字顏色為父元素的顏色 */
+    text-decoration: none; /* 移除文字下劃線 */
+    cursor: pointer; /* 將光標設置為手型 */
+    }
   
 .btn.MetaWall_button{
     background-color: $MataWall_blue;

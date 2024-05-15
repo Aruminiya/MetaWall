@@ -21,7 +21,9 @@
             <img :src="post.user.photo" alt="userPhoto">
         </div>
         <div class="userName">
-          {{post.user.name}}<br>
+          <router-link to="/community/personlWall">
+            <p class="m-0"><span>{{post.user.name}}</span></p>
+          </router-link>
           <div class="date">{{post.createdAt.split(/(T|\.)/)[0]}}
             &nbsp;{{post.createdAt.split(/(T|\.)/)[2]}}</div>
         </div>
@@ -129,9 +131,18 @@ export default {
 
 .user{
     cursor: pointer;
-    .userName .date{
-      font-size: 12px;
-      opacity: 0.5;
+    .userName {
+      &:hover {
+        p span{
+          transition: all 0.1s ease-in-out ;
+          color: $MataWall_blue;
+          border-bottom: solid 2px $MataWall_blue;
+        }
+      }
+      .date{
+        font-size: 12px;
+        opacity: 0.5;
+      }
     }
 }
 
