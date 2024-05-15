@@ -64,7 +64,7 @@
 
 <script>
 import { mapActions, mapState } from 'pinia';
-import posts from '../stores/posts';
+import postsStore from '../stores/postsStore';
 
 export default {
   data() {
@@ -97,10 +97,10 @@ export default {
     };
   },
   computed: {
-    ...mapState(posts, ['posts']),
+    ...mapState(postsStore, ['posts']),
   },
   methods: {
-    ...mapActions(posts, ['getPosts']),
+    ...mapActions(postsStore, ['getPosts']),
   },
   mounted() {
     this.getPosts();

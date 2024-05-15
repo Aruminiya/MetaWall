@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { defineStore } from 'pinia';
 
-export default defineStore('posts', {
+export default defineStore('postsStore', {
   state: () => ({
     posts: [],
     errMessage: {},
@@ -11,7 +11,6 @@ export default defineStore('posts', {
       try {
         const posts = await axios.get(`${import.meta.env.VITE_HOST}/posts`);
         this.posts = posts;
-        console.log(this.posts);
       } catch (err) {
         this.errMessage = err;
       }
