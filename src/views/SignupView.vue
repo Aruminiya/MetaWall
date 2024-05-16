@@ -63,11 +63,21 @@
                 v-model="user.sex"
               ></v-field>
               <label for="female" class="mx-1">女性</label>
+              &emsp;
+              <v-field
+                id="other"
+                name="性別"
+                type="radio"
+                :class="{ 'is-invalid': errors['性別'] }"
+                value="other" rules="required"
+                v-model="user.sex"
+              ></v-field>
+              <label for="other" class="mx-1">其他</label>
               <error-message name="性別" class="invalid-feedback"></error-message>
             </div>
 
             <button class="btn MetaWall_button btnShdow mt-2" type="submit"
-            :disabled="isLogin">註冊</button>
+            :disabled="isSignup">註冊</button>
             <router-link class="routerLink" to="login">
               登入帳號
             </router-link>
@@ -80,10 +90,14 @@
 </template>
 
 <script>
+// 其他 Pinia Store
+import { mapActions } from 'pinia';
+
 // 把需要的語系 驗證 驗證規則引入
 import * as VeeValidate from 'vee-validate';
 import * as VeeValidateI18n from '@vee-validate/i18n';
 import * as VeeValidateRules from '@vee-validate/rules';
+import usersStore from '../stores/usersStore';
 
 // 中文語系 JSON
 import zhTW from '../assets/zh_TW.json';
@@ -110,7 +124,7 @@ export default {
   },
   data() {
     return {
-      isLogin: false,
+      isSignup: false,
       user: {
         name: '',
         email: '',
@@ -122,19 +136,27 @@ export default {
     };
   },
   methods: {
-    async onSubmit() {
+    ...mapActions(usersStore, ['toAuth', 'loginAndSignup']),
+    onSubmit() {
       this.isLogin = true;
       this.errorMessage = '';
-      try {
-        await this.axios.post(`${import.meta.env.VITE_HOST}/users/signUp`, this.user);
-
-        this.$router.push('/login');
-        this.isLogin = false;
-      } catch (err) {
-        this.errorMessage = `註冊失敗：${err?.response?.data?.message}`;
-        this.isLogin = false;
-      }
+      this.loginAndSignup(this.user, 'signUp').then((res) => {
+        // 如果登入狀態 200 就跳轉頁面 反之回傳錯誤
+        if (res.status === 200) {
+          this.$router.push('/login');
+        } else {
+          this.errorMessage = `註冊失敗：${res?.response?.data?.message}`;
+          this.isLogin = false;
+        }
+      });
     },
+  },
+  async mounted() {
+    // 驗證是否已有 Token 若有 直接倒向頁面
+    const isAuth = await this.toAuth();
+    if (isAuth) {
+      this.$router.push('/community/postArea');
+    }
   },
 };
 </script>

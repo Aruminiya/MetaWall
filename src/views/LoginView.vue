@@ -89,11 +89,11 @@ export default {
     };
   },
   methods: {
-    ...mapActions(usersStore, ['toAuth', 'login']),
+    ...mapActions(usersStore, ['toAuth', 'loginAndSignup']),
     onSubmit() {
       this.isLogin = true;
       this.errorMessage = '';
-      this.login(this.user).then((res) => {
+      this.loginAndSignup(this.user, 'logIn').then((res) => {
         // 如果登入狀態 200 就跳轉頁面 反之回傳錯誤
         if (res.status === 200) {
           this.$router.push('/community/postArea');
@@ -105,6 +105,7 @@ export default {
     },
   },
   async mounted() {
+    // 驗證是否已有 Token 若有 直接倒向頁面
     const isAuth = await this.toAuth();
     if (isAuth) {
       this.$router.push('/community/postArea');

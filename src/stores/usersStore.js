@@ -31,13 +31,14 @@ export default defineStore('usersStore', {
       }
     },
 
-    async login(user) {
+    async loginAndSignup(user, mode) {
       try {
-        const loginUser = await axios.post(`${import.meta.env.VITE_HOST}/users/logIn`, user);
+        const loginUser = await axios.post(`${import.meta.env.VITE_HOST}/users/${mode}`, user);
         const { token } = loginUser.data;
 
-        // 將 token 存入 cookie，設定有效期為一個禮拜
-        Cookies.set('MetaWall_user_token', token, { expires: 7 });
+        // 如果模式室登入 將 token 存入 cookie，設定有效期為一個禮拜
+        if (mode === 'logIn') { Cookies.set('MetaWall_user_token', token, { expires: 7 }); }
+
         return loginUser;
       } catch (err) {
         return err;
