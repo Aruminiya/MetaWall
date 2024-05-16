@@ -46,11 +46,7 @@ export default defineStore('usersStore', {
     },
 
     logout() {
-      console.log(Cookies.set('test001', 'asdfdgdhfjhgjrrg'));
-      console.log(document.cookie);
-      // try {
-
-      // } catch {}
+      Cookies.remove('MetaWall_user_token');
     },
   },
 });

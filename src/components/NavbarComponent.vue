@@ -17,7 +17,7 @@
             <router-link to="/community/modifyPersonal">
               <button class="m-0 py-1 w-100 text-center">修改個人資料</button>
             </router-link>
-            <button class="m-0 py-1 w-100 text-center" @click="logout()">登出</button>
+            <button class="m-0 py-1 w-100 text-center" @click="logoutBtn()">登出</button>
           </div>
         </div>
     </div>
@@ -46,6 +46,10 @@ export default {
   },
   methods: {
     ...mapActions(usersStore, ['logout']),
+    logoutBtn() {
+      this.logout();
+      this.$router.push('/login');
+    },
   },
 };
 </script>
