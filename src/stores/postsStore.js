@@ -23,7 +23,6 @@ export default defineStore('postsStore', {
         await axios.patch(`${import.meta.env.VITE_HOST}/posts/${id}`, patchData);
         this.getPosts();
       } catch (err) {
-        console.log(err);
         this.errMessage = err;
       }
     },
