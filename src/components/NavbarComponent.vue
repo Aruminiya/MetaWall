@@ -11,9 +11,13 @@
           </div>
           <div class="popPanal position-absolute end-0"
           :class="{ popPanalActive: isPopPanal }">
-            <button class="m-0 py-1 w-100 text-center">我的貼文</button>
-            <button class="m-0 py-1 w-100 text-center">修改個人資料</button>
-            <button class="m-0 py-1 w-100 text-center">登出</button>
+            <router-link to="/community/personlWall">
+              <button class="m-0 py-1 w-100 text-center">我的貼文</button>
+            </router-link>
+            <router-link to="/community/modifyPersonal">
+              <button class="m-0 py-1 w-100 text-center">修改個人資料</button>
+            </router-link>
+            <button class="m-0 py-1 w-100 text-center" @click="logout()">登出</button>
           </div>
         </div>
     </div>
@@ -24,6 +28,9 @@
 </template>
 
 <script>
+import { mapActions } from 'pinia';
+import usersStore from '../stores/usersStore';
+
 export default {
   name: 'NavbarComponent',
   data() {
@@ -36,6 +43,9 @@ export default {
       type: Object,
       required: true,
     },
+  },
+  methods: {
+    ...mapActions(usersStore, ['logout']),
   },
 };
 </script>

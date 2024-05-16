@@ -16,6 +16,7 @@
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
     "dotenv": "^16.3.1",
+    "js-cookie": "^3.0.5",
     "pinia": "^2.1.7",
     "vee-validate": "^4.12.8",
     "vue": "^3.3.11",

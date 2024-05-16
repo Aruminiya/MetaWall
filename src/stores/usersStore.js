@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { defineStore } from 'pinia';
 
+import Cookies from 'js-cookie';
+
 export default defineStore('usersStore', {
   state: () => ({
     currentUser: '',
@@ -27,6 +29,27 @@ export default defineStore('usersStore', {
       } catch (err) {
         this.errorMessages = err;
       }
+    },
+
+    async login(user) {
+      try {
+        const loginUser = await axios.post(`${import.meta.env.VITE_HOST}/users/logIn`, user);
+        const { token } = loginUser.data;
+
+        // 將 token 存入 cookie，設定有效期為一個禮拜
+        Cookies.set('MetaWall_user_token', token, { expires: 7 });
+        return loginUser;
+      } catch (err) {
+        return err;
+      }
+    },
+
+    logout() {
+      console.log(Cookies.set('test001', 'asdfdgdhfjhgjrrg'));
+      console.log(document.cookie);
+      // try {
+
+      // } catch {}
     },
   },
 });

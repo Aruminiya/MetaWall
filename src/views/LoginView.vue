@@ -89,27 +89,19 @@ export default {
     };
   },
   methods: {
-    ...mapActions(usersStore, ['toAuth']),
-    async onSubmit() {
+    ...mapActions(usersStore, ['toAuth', 'login']),
+    onSubmit() {
       this.isLogin = true;
       this.errorMessage = '';
-      try {
-        const loginUser = await this.axios.post(`${import.meta.env.VITE_HOST}/users/logIn`, this.user);
-        const { token } = loginUser.data;
-
-        // 設定有效期為一個禮拜
-        const expiresDate = new Date();
-        expiresDate.setDate(expiresDate.getDate() + 7);
-
-        // 將 token 存入 cookie，設定有效期為一個禮拜
-        document.cookie = `MetaWall_user_token=${token}; expires=${expiresDate.toUTCString()}; path=/`;
-
-        this.$router.push('/community/postArea');
-        this.isLogin = false;
-      } catch (err) {
-        this.errorMessage = `登入失敗：${err?.response?.data?.message}`;
-        this.isLogin = false;
-      }
+      this.login(this.user).then((res) => {
+        // 如果登入狀態 200 就跳轉頁面 反之回傳錯誤
+        if (res.status === 200) {
+          this.$router.push('/community/postArea');
+        } else {
+          this.errorMessage = `登入失敗：${res?.response?.data?.message}`;
+          this.isLogin = false;
+        }
+      });
     },
   },
   async mounted() {
