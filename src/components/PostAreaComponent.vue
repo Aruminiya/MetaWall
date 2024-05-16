@@ -15,7 +15,7 @@
       <i class="bi bi-search"></i></button>
     </div>
   </section>
-  <section v-for="post in posts?.data?.data" :key="post._id" class="postArea my-3 p-4">
+  <section v-for="(post, index) in posts?.data?.data" :key="post._id" class="postArea my-3 p-4">
     <div class="user d-flex align-items-center">
         <div class="imgContainer mx-1" style="width: 45px;height: 45px;">
             <img :src="post.user.photo" alt="userPhoto">
@@ -32,23 +32,26 @@
     <div class="postImg my-3">
       <img :src="post.image" alt="postImg">
     </div>
-    <div class="like my-3 d-flex">
-      <i v-if="isLikeHaveMe(post,currentUser._id)"
-      class="bi bi-hand-thumbs-up-fill custom-thumbs"></i>
-      <i v-else class="bi bi-hand-thumbs-up custom-thumbs"></i>
-      <p class="mb-0 ml-1"
-      v-if="isLikeHaveMe(post,currentUser._id)">您與其他 {{ post.likes.length - 1 }} 位按讚</p>
-      <p class="mb-0 ml-1"
-      v-else>{{ post.likes.length }} 位按讚</p>
+    <div class="like my-3 d-flex align-items-center">
+      <div class="likeBtn" ref="like" @click="likeSubmit(post, currentUser._id)">
+        <i v-if="isLikeHaveMe(post,currentUser._id)"
+        class="bi bi-hand-thumbs-up-fill"></i>
+        <i v-else class="bi bi-hand-thumbs-up"></i>
+      </div>
+
+      <div class="mb-0 ms-1"
+      v-if="isLikeHaveMe(post,currentUser._id)">您與其他 {{ post.likes.length - 1 }} 位按讚</div>
+      <div class="mb-0 ms-1"
+      v-else>{{ post.likes.length }} 位按讚</div>
     </div>
     <div class="toMessage d-flex align-items-center my-3">
         <div class="imgContainer mx-1">
-            <img :src="post.user.photo" alt="userPhoto">
+            <img :src="currentUserData.photo" alt="userPhoto">
         </div>
         <div class="input-group">
-          <input type="text" class="form-control h-100" placeholder="留言...">
+          <input type="text" class="form-control h-100" placeholder="留言..." ref="comment">
           <button class="btn btn-secondary MetaWall_button px-5"
-          type="button">留言</button>
+          type="button" @click="commentSubmit(post, index)" >留言</button>
         </div>
     </div>
     <div v-for="comment in post.comments" :key="comment._id">
@@ -74,14 +77,17 @@
 <script>
 import { mapActions, mapState } from 'pinia';
 // import Cookie from 'js-cookie';
+import Cookie from 'js-cookie';
 import postsStore from '../stores/postsStore';
 import usersStore from '../stores/usersStore';
+import commentsStore from '../stores/commentsStore';
 
 export default {
   data() {
     return {
       searchKeyWord: '',
       filterOption: 'newToOld',
+      currentUserData: JSON.parse(Cookie.get('MetaWall_user')),
     };
   },
   computed: {
@@ -89,11 +95,57 @@ export default {
     ...mapState(usersStore, ['currentUser']),
   },
   methods: {
-    ...mapActions(postsStore, ['getPosts']),
+    ...mapActions(postsStore, ['getPosts', 'patchPosts']),
+    ...mapActions(commentsStore, ['postComments']),
     isLikeHaveMe(post, userId) {
       // 檢查 "likes" 數組是否有任何一個元素滿足指定條件
       // eslint-disable-next-line no-underscore-dangle
       return post.likes.some((like) => like._id === userId);
+    },
+    // 貼文留言
+    async commentSubmit(post, index) {
+      const singleComment = this.$refs.comment[index].value;
+      const commentData = {
+        content: singleComment,
+        likes: [],
+        // eslint-disable-next-line no-underscore-dangle
+        user: this.currentUserData._id,
+      };
+      const newComment = await this.postComments(commentData);
+      // eslint-disable-next-line no-underscore-dangle
+      const newCommentID = newComment?.data?.data?._id;
+      // eslint-disable-next-line no-underscore-dangle
+      const postCommentsId = post.comments.map((item) => item._id);
+      postCommentsId.push(newCommentID);
+
+      const updateComments = { comments: postCommentsId };
+      // eslint-disable-next-line no-underscore-dangle
+      await this.patchPosts(post._id, updateComments);
+
+      this.$refs.comment[index].value = '';
+    },
+
+    // 貼文按讚
+    async likeSubmit(post, userId) {
+      const isLikeHaveMe = this.isLikeHaveMe(post, userId);
+
+      // eslint-disable-next-line no-underscore-dangle
+      const postLikesId = post.likes.map((item) => item._id);
+
+      // 如果已經按讚 推入讚 反之 到到我按讚的 id 後移除
+      if (isLikeHaveMe) {
+        // eslint-disable-next-line no-underscore-dangle
+        const findIndexLikeHaveMe = post.likes.findIndex((item) => item._id === userId);
+        postLikesId.splice(findIndexLikeHaveMe, 1);
+      } else {
+        // eslint-disable-next-line no-underscore-dangle
+        postLikesId.push(this.currentUserData._id);
+      }
+
+      const updateLikes = { likes: postLikesId };
+      // eslint-disable-next-line no-underscore-dangle
+      await this.patchPosts(post._id, updateLikes);
+      // console.log(postLikesId, userId);
     },
   },
   mounted() {
@@ -182,10 +234,19 @@ export default {
     object-fit: contain;
   }
 }
-
-.custom-thumbs {
-  font-size: 20px;
-  color: $MataWall_blue; /* 这里更改为你想要的颜色 */
+.likeBtn {
+  transition: all 0.1s ease-in-out;
+  .bi {
+    cursor: pointer;
+    font-size: 20px;
+    color: $MataWall_blue; /* 这里更改为你想要的颜色 */
+  }
+  &:hover{
+      scale: 1.1;
+    }
+  &:active{
+    scale: 0.9;
+  }
 }
 
 .toMessage{
