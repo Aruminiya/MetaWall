@@ -46,10 +46,14 @@
 </template>
 
 <script>
+// 其他 Pinia Store
+import { mapActions } from 'pinia';
+
 // 把需要的語系 驗證 驗證規則引入
 import * as VeeValidate from 'vee-validate';
 import * as VeeValidateI18n from '@vee-validate/i18n';
 import * as VeeValidateRules from '@vee-validate/rules';
+import usersStore from '../stores/usersStore';
 
 // 中文語系 JSON
 import zhTW from '../assets/zh_TW.json';
@@ -85,6 +89,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(usersStore, ['toAuth']),
     async onSubmit() {
       this.isLogin = true;
       this.errorMessage = '';
@@ -106,6 +111,12 @@ export default {
         this.isLogin = false;
       }
     },
+  },
+  async mounted() {
+    const isAuth = await this.toAuth();
+    if (isAuth) {
+      this.$router.push('/community/postArea');
+    }
   },
 };
 </script>

@@ -1,29 +1,42 @@
 <template>
-  <nav class="navbar navbar-light position-sticky top-0 mb-1">
-    <div class="container">
+  <nav class="navbar navbar-light position-sticky top-0 mb-1" @click="isPopPanal = false">
+    <div class="container position-relative">
         <router-link class="routerLink navbar-brand m-0" to="/community/postArea">
             <h4 class="logo text-center">MetaWall</h4>
         </router-link>
-        <div class="user d-flex">
-            <div class="imgContainer mx-1">
-                <img :src="currentUser.photo" alt="userPhoto">
-            </div>
-            <div class="userName">{{ currentUser.name }}</div>
+        <div class="position-relative">
+          <div class="user d-flex" @click.stop="isPopPanal = !isPopPanal">
+            <div class="imgContainer mx-1"><img :src="currentUser.photo" alt="userPhoto"></div>
+            <div class="userName"><p class="m-0">{{ currentUser.name }}</p></div>
+          </div>
+          <div class="popPanal position-absolute end-0"
+          :class="{ popPanalActive: isPopPanal }">
+            <button class="m-0 py-1 w-100 text-center">我的貼文</button>
+            <button class="m-0 py-1 w-100 text-center">修改個人資料</button>
+            <button class="m-0 py-1 w-100 text-center">登出</button>
+          </div>
         </div>
     </div>
   </nav>
+  <div class="container-fluid popPanalBG position-fixed top-0 mb-1 start-0"
+  :class="{ popPanalActive: isPopPanal }"
+  @click="isPopPanal = false"></div>
 </template>
 
 <script>
 export default {
   name: 'NavbarComponent',
+  data() {
+    return {
+      isPopPanal: false,
+    };
+  },
   props: {
     currentUser: {
       type: Object,
       required: true,
     },
   },
-
 };
 </script>
 
@@ -33,10 +46,22 @@ nav{
 }
 
 .user{
-    cursor: pointer;
-    .userName{
-      border-bottom: solid 2px $MataWall_black;
+  cursor: pointer;
+  p{
+    border-bottom: solid 2px $MataWall_black;
+  }
+  &:hover {
+    p{
+      transition: all 0.1s ease-in-out ;
+      border-bottom: solid 2px $MataWall_blue;
+      color: $MataWall_blue;
     }
+    .icon{
+      transition: all 0.1s ease-in-out ;
+      background-color: $MataWall_blue;
+      color: $MetaWall_white;
+    }
+  }
 }
 .navbar{
     background-color: $MetaWall_white;
@@ -60,5 +85,31 @@ nav{
       font-weight: 400;
       font-size: 26px;
       color: $MataWall_black;
+      z-index: -2;
+}
+
+.popPanal{
+  display: none;
+  border: solid 2px $MataWall_black;
+  background-color: $MetaWall_white;
+  min-width: 182px;
+  button{
+    background-color: $MetaWall_white;
+    font-weight: 500;
+    border: solid 1px $MataWall_black;
+    transition: all 0.1s ease-in-out;
+    &:hover{
+      background-color: $MataWall_gray02;
+    }
+  }
+}
+.popPanalBG{
+    display: none;
+    z-index: 1;
+    width: 100vw;
+    height: 100vh;
+  }
+.popPanalActive{
+  display: block;
 }
 </style>
