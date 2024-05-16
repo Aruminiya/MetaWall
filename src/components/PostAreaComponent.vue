@@ -73,6 +73,7 @@
 
 <script>
 import { mapActions, mapState } from 'pinia';
+// import Cookie from 'js-cookie';
 import postsStore from '../stores/postsStore';
 import usersStore from '../stores/usersStore';
 

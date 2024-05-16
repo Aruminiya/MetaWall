@@ -34,10 +34,13 @@ export default defineStore('usersStore', {
     async loginAndSignup(user, mode) {
       try {
         const loginUser = await axios.post(`${import.meta.env.VITE_HOST}/users/${mode}`, user);
-        const { token } = loginUser.data;
+        const { token, data } = loginUser.data;
 
         // 如果模式室登入 將 token 存入 cookie，設定有效期為一個禮拜
-        if (mode === 'logIn') { Cookies.set('MetaWall_user_token', token, { expires: 7 }); }
+        if (mode === 'logIn') {
+          Cookies.set('MetaWall_user_token', token, { expires: 7 });
+          Cookies.set('MetaWall_user', JSON.stringify(data), { expires: 7 });
+        }
 
         return loginUser;
       } catch (err) {
@@ -47,6 +50,7 @@ export default defineStore('usersStore', {
 
     logout() {
       Cookies.remove('MetaWall_user_token');
+      Cookies.remove('MetaWall_user');
     },
   },
 });
