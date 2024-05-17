@@ -33,14 +33,20 @@
       <img :src="post.image" alt="postImg">
     </div>
     <div class="like my-3 d-flex align-items-center">
-      <div class="likeBtn" ref="like" @click="likeSubmit(post, currentUser._id)">
-        <i v-if="isLikeHaveMe(post,currentUser._id)"
+      <div class="likeBtn" ref="like" @click="likeSubmit(post, currentUserData._id)">
+        <i v-if="isLikeHaveMe(post,currentUserData._id)"
         class="bi bi-hand-thumbs-up-fill"></i>
         <i v-else class="bi bi-hand-thumbs-up"></i>
       </div>
 
       <div class="mb-0 ms-1"
-      v-if="isLikeHaveMe(post,currentUser._id)">您與其他 {{ post.likes.length - 1 }} 位按讚</div>
+      v-if="isLikeHaveMe(post,currentUserData._id) && post.likes.length === 1 ">
+      您已按讚</div>
+      <div class="mb-0 ms-1"
+      v-else-if="post.likes.length === 0"> 尚未有人按讚</div>
+      <div class="mb-0 ms-1"
+      v-else-if="isLikeHaveMe(post,currentUserData._id) && post.likes.length > 1">
+      您與其他 {{ post.likes.length - 1 }} 位按讚</div>
       <div class="mb-0 ms-1"
       v-else>{{ post.likes.length }} 位按讚</div>
     </div>
@@ -81,6 +87,7 @@ import Cookie from 'js-cookie';
 import postsStore from '../stores/postsStore';
 import usersStore from '../stores/usersStore';
 import commentsStore from '../stores/commentsStore';
+import likesStore from '../stores/likesStore';
 
 export default {
   data() {
@@ -97,10 +104,11 @@ export default {
   methods: {
     ...mapActions(postsStore, ['getPosts', 'patchPosts']),
     ...mapActions(commentsStore, ['postComments']),
+    ...mapActions(likesStore, ['getLikes', 'postLike', 'deliteLike']),
     isLikeHaveMe(post, userId) {
       // 檢查 "likes" 數組是否有任何一個元素滿足指定條件
       // eslint-disable-next-line no-underscore-dangle
-      return post.likes.some((like) => like._id === userId);
+      return post.likes.some((like) => like.user._id === userId);
     },
     // 貼文留言
     async commentSubmit(post, index) {
@@ -127,25 +135,21 @@ export default {
 
     // 貼文按讚
     async likeSubmit(post, userId) {
-      const isLikeHaveMe = this.isLikeHaveMe(post, userId);
-
-      // eslint-disable-next-line no-underscore-dangle
-      const postLikesId = post.likes.map((item) => item._id);
-
-      // 如果已經按讚 推入讚 反之 到到我按讚的 id 後移除
-      if (isLikeHaveMe) {
+      if (this.isLikeHaveMe(post, userId)) {
+        // 如果我已按讚 刪除讚並重新渲染資料
         // eslint-disable-next-line no-underscore-dangle
-        const findIndexLikeHaveMe = post.likes.findIndex((item) => item._id === userId);
-        postLikesId.splice(findIndexLikeHaveMe, 1);
+        const likeData = post.likes.filter((like) => like.user._id === userId);
+        // eslint-disable-next-line no-underscore-dangle
+        this.deliteLike(likeData[0]._id).then(() => {
+          this.getPosts(this.searchKeyWord, this.filterOption);
+        });
       } else {
+        // 如果我沒按讚 新增按讚並重新渲染資料
         // eslint-disable-next-line no-underscore-dangle
-        postLikesId.push(this.currentUserData._id);
+        this.postLike(post._id, userId).then(() => {
+          this.getPosts(this.searchKeyWord, this.filterOption);
+        });
       }
-
-      const updateLikes = { likes: postLikesId };
-      // eslint-disable-next-line no-underscore-dangle
-      await this.patchPosts(post._id, updateLikes);
-      // console.log(postLikesId, userId);
     },
   },
   mounted() {
