@@ -115,22 +115,15 @@ export default {
       const singleComment = this.$refs.comment[index].value;
       const commentData = {
         content: singleComment,
-        likes: [],
         // eslint-disable-next-line no-underscore-dangle
         user: this.currentUserData._id,
+        // eslint-disable-next-line no-underscore-dangle
+        post: post._id,
       };
-      const newComment = await this.postComments(commentData);
-      // eslint-disable-next-line no-underscore-dangle
-      const newCommentID = newComment?.data?.data?._id;
-      // eslint-disable-next-line no-underscore-dangle
-      const postCommentsId = post.comments.map((item) => item._id);
-      postCommentsId.push(newCommentID);
-
-      const updateComments = { comments: postCommentsId };
-      // eslint-disable-next-line no-underscore-dangle
-      await this.patchPosts(post._id, updateComments);
-
-      this.$refs.comment[index].value = '';
+      this.postComments(commentData).then(() => {
+        this.$refs.comment[index].value = '';
+        this.getPosts(this.searchKeyWord, this.filterOption);
+      });
     },
 
     // 貼文按讚
