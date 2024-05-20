@@ -17,6 +17,16 @@ export default defineStore('postsStore', {
       }
     },
 
+    // 新增貼文
+    async toPost(postData) {
+      try {
+        return await axios.post(`${import.meta.env.VITE_HOST}/posts`, postData);
+      } catch (err) {
+        this.errMessage = err;
+        return err;
+      }
+    },
+
     // 修改貼文
     async patchPosts(id, patchData) {
       try {

@@ -29,7 +29,7 @@
         </div>
     </div>
     <div class="content my-3">{{post.content}}</div>
-    <div class="postImg my-3">
+    <div v-if="post.image" class="postImg my-3">
       <img :src="post.image" alt="postImg">
     </div>
     <div class="like my-3 d-flex align-items-center">
@@ -146,6 +146,10 @@ export default {
     },
   },
   mounted() {
+    this.getPosts();
+  },
+  // 當貼文完成後跳轉回來要再抓一次資料 否則留言會不能用
+  beforeRouteUpdate() {
     this.getPosts();
   },
 
