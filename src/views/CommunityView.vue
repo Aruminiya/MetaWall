@@ -11,7 +11,7 @@
             <button class="btn MetaWall_button btnShdow w-100 mt-2" type="button">張貼動態</button>
           </router-link>
           <div class="p-3">
-            <router-link to="/community/personlWall"
+            <router-link to="/community/postArea"
              class="panelBtn d-flex align-items-center">
               <div class="imgContainer mx-1 my-2 me-3">
                   <img :src="currentUser.photo" alt="userPhoto">

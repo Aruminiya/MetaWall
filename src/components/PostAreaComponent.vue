@@ -2,16 +2,17 @@
   <!-- {{ posts?.data?.data }} -->
   <section class="userControl d-flex">
     <select class="form-select flex-grow-2 custom-select me-3" name="filter"
-    v-model="filterOption" @change="this.getPosts(searchKeyWord,filterOption)">
+    v-model="filterOption"
+    @change="this.getPosts(this.$route.params.id,searchKeyWord,filterOption)">
       <option value="newToOld" selected>最新貼文</option>
       <option value="oldToNew">最舊貼文</option>
-      <option value="leastLikes">最多讚數</option>
-      <option value="mostLikes">最少讚數</option>
+      <option value="mostLikes">最多讚數</option>
+      <option value="leastLikes">最少讚數</option>
     </select>
     <div class="input-group">
       <input type="text" class="form-control h-100" placeholder="搜尋貼文" v-model="searchKeyWord">
       <button class="btn btn-secondary MetaWall_button"
-      type="button" @click="this.getPosts(searchKeyWord,filterOption);">
+      type="button" @click="this.getPosts(this.$route.params.id,searchKeyWord,filterOption);">
       <i class="bi bi-search"></i></button>
     </div>
   </section>
@@ -21,7 +22,7 @@
             <img :src="post.user.photo" alt="userPhoto">
         </div>
         <div class="userName">
-          <router-link to="/community/personlWall">
+          <router-link :to="'/community/postArea/' + post.user._id">
             <p class="m-0"><span>{{post.user.name}}</span></p>
           </router-link>
           <div class="date">{{post.createdAt.split(/(T|\.)/)[0]}}
@@ -90,12 +91,12 @@ import commentsStore from '../stores/commentsStore';
 import likesStore from '../stores/likesStore';
 
 export default {
-  props: { postUserId: { type: String, default: undefined } },
   data() {
     return {
       searchKeyWord: '',
       filterOption: 'newToOld',
       currentUserData: JSON.parse(Cookie.get('MetaWall_user')),
+      selectUserId: '',
     };
   },
   computed: {
@@ -123,7 +124,7 @@ export default {
       };
       this.postComments(commentData).then(() => {
         this.$refs.comment[index].value = '';
-        this.getPosts(this.searchKeyWord, this.filterOption);
+        this.getPosts(this.$route.params.id, this.searchKeyWord, this.filterOption);
       });
     },
 
@@ -135,19 +136,19 @@ export default {
         const likeData = post.likes.filter((like) => like.user._id === userId);
         // eslint-disable-next-line no-underscore-dangle
         this.deliteLike(likeData[0]._id).then(() => {
-          this.getPosts(this.searchKeyWord, this.filterOption);
+          this.getPosts(this.$route.params.id, this.searchKeyWord, this.filterOption);
         });
       } else {
         // 如果我沒按讚 新增按讚並重新渲染資料
         // eslint-disable-next-line no-underscore-dangle
         this.postLike(post._id, userId).then(() => {
-          this.getPosts(this.searchKeyWord, this.filterOption);
+          this.getPosts(this.$route.params.id, this.searchKeyWord, this.filterOption);
         });
       }
     },
   },
   mounted() {
-    this.getPosts(this.postUserId);
+    this.getPosts();
   },
 };
 </script>

@@ -11,7 +11,7 @@
           </div>
           <div class="popPanal position-absolute end-0"
           :class="{ popPanalActive: isPopPanal }">
-            <router-link to="/community/personlWall">
+            <router-link to="/community/postArea">
               <button class="m-0 py-1 w-100 text-center">我的貼文</button>
             </router-link>
             <router-link to="/community/modifyPersonal">

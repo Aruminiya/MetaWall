@@ -14,11 +14,13 @@
                 <span class="text-nowrap">追蹤</span></button>
         </div>
     </div>
-    <PostAreaComponent :postUserId="postUserId"/>
+    <PostAreaComponent/>
 </template>
 
 <script>
-import Cookies from 'js-cookie';
+import { mapActions } from 'pinia';
+import postsStore from '../stores/postsStore';
+
 import PostAreaComponent from './PostAreaComponent.vue';
 
 export default {
@@ -26,8 +28,14 @@ export default {
   data() {
     return {
       // eslint-disable-next-line no-underscore-dangle
-      postUserId: JSON.parse(Cookies.get('MetaWall_user'))._id,
+      postUserId: this.$route.params.id,
     };
+  },
+  methods: {
+    ...mapActions(postsStore, ['getPosts']),
+  },
+  mounted() {
+    this.getPosts(this.postUserId);
   },
 };
 </script>
