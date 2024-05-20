@@ -24,6 +24,7 @@ export default defineStore('commentsStore', {
         return comments;
       } catch (err) {
         this.errMessage = err;
+        console.log(err);
         return err;
       }
     },

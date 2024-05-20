@@ -90,6 +90,7 @@ import commentsStore from '../stores/commentsStore';
 import likesStore from '../stores/likesStore';
 
 export default {
+  props: { postUserId: { type: String, default: undefined } },
   data() {
     return {
       searchKeyWord: '',
@@ -146,13 +147,8 @@ export default {
     },
   },
   mounted() {
-    this.getPosts();
+    this.getPosts(this.postUserId);
   },
-  // 當貼文完成後跳轉回來要再抓一次資料 否則留言會不能用
-  beforeRouteUpdate() {
-    this.getPosts();
-  },
-
 };
 </script>
 

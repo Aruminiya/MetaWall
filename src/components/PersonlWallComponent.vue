@@ -14,14 +14,21 @@
                 <span class="text-nowrap">追蹤</span></button>
         </div>
     </div>
-    <PostAreaComponent/>
+    <PostAreaComponent :postUserId="postUserId"/>
 </template>
 
 <script>
+import Cookies from 'js-cookie';
 import PostAreaComponent from './PostAreaComponent.vue';
 
 export default {
   components: { PostAreaComponent },
+  data() {
+    return {
+      // eslint-disable-next-line no-underscore-dangle
+      postUserId: JSON.parse(Cookies.get('MetaWall_user'))._id,
+    };
+  },
 };
 </script>
 

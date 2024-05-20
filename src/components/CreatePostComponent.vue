@@ -43,7 +43,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(postsStore, ['toPost']),
+    ...mapActions(postsStore, ['toPost', 'getPosts']),
     upLoadimage(event) {
       const file = event.target.files[0];
       if (file) {
@@ -104,7 +104,9 @@ export default {
           title: '貼文上傳成功',
         }).then(() => {
           this.resetForm();
-          this.$router.push('/community/postArea');
+          this.getPosts().then(() => {
+            this.$router.push('/community/postArea');
+          });
         });
       } catch (err) {
         Swal.fire({
