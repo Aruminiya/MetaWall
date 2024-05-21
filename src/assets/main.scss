@@ -34,6 +34,12 @@ body {
       color: $MataWall_black;
     }
 }
+.btn.MetaWall_button_yellow{
+    background-color: $MataWall_yellow;
+    border: solid 2px $MataWall_black;
+    color: $MataWall_black;
+    transition: scale 0.1s ease-in-out;
+}
 .btnShdow{
     box-shadow: -2px 2px $MataWall_black;
 }

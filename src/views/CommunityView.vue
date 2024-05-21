@@ -75,10 +75,6 @@ export default {
   methods: {
     ...mapActions(postsStore, ['getPosts', 'patchPosts']),
   },
-
-  mounted() {
-    this.getPosts();
-  },
 };
 </script>
 

@@ -57,5 +57,29 @@ export default defineStore('usersStore', {
       Cookies.remove('MetaWall_user_token');
       Cookies.remove('MetaWall_user');
     },
+
+    // 追蹤使用者
+    async userFollow(userId, followingId) {
+      try {
+        const followUser = await axios.patch(`${import.meta.env.VITE_HOST}/users/${userId}/follow`, { following: followingId });
+        return followUser;
+      } catch (err) {
+        this.errorMessages = err;
+        console.log(err);
+        return err;
+      }
+    },
+
+    // 退追蹤使用者
+    async userUnFollow(userId, followingId) {
+      try {
+        const followUser = await axios.patch(`${import.meta.env.VITE_HOST}/users/${userId}/unfollow`, { following: followingId });
+        return followUser;
+      } catch (err) {
+        this.errorMessages = err;
+        console.log(err);
+        return err;
+      }
+    },
   },
 });

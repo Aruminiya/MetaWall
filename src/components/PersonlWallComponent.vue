@@ -6,14 +6,20 @@
             </div>
             <div class="userName">
                 <p class="m-0">{{postUserData?.name}}</p>
-                <p class="m-0">{{postUserData?.follower.length}} 人追蹤</p>
+                <p class="m-0">{{postUserData?.follower?.length}} 人追蹤</p>
             </div>
         </div>
         <div class="follweBtn d-flex align-items-center me-3">
-            <button v-if="postUserData?._id !== currentUserData?._id"
+          <div v-if="postUserData?._id !== currentUserData?._id">
+            <button v-if="!isFollowing"
             type="button" class="btn MetaWall_button btnShdow px-4">
-                <span class="text-nowrap">追蹤</span>
+                <span class="text-nowrap" @click="toFollow()">追蹤</span>
             </button>
+            <button v-else
+            type="button" class="btn MetaWall_button_yellow btnShdow px-4">
+                <span class="text-nowrap" @click="toUnFollow()">已追蹤</span>
+            </button>
+          </div>
         </div>
     </div>
     <PostAreaComponent/>
@@ -36,14 +42,42 @@ export default {
       currentUserData: JSON.parse(Cookie.get('MetaWall_user')),
     };
   },
+  computed: {
+    // 檢查該貼文人是否被我追蹤
+    isFollowing() {
+      // eslint-disable-next-line no-underscore-dangle
+      return this.postUserData?.follower.some((element) => element === this.currentUserData._id);
+    },
+  },
   methods: {
     ...mapActions(postsStore, ['getPosts']),
-    ...mapActions(usersStore, ['getUser']),
+    ...mapActions(usersStore, ['getUser', 'userFollow', 'userUnFollow']),
+    toFollow() {
+      // eslint-disable-next-line no-underscore-dangle
+      console.log(this.currentUserData._id, this.postUserData._id);
+      // eslint-disable-next-line no-underscore-dangle
+      this.userFollow(this.currentUserData._id, this.postUserData._id).then(() => {
+        this.getUser(this.$route.params.id).then((postUser) => {
+          this.postUserData = postUser?.data?.data[0];
+          this.getPosts(this.$route.params.id);
+        });
+      });
+    },
+    toUnFollow() {
+      // eslint-disable-next-line no-underscore-dangle
+      console.log(this.currentUserData._id, this.postUserData._id);
+      // eslint-disable-next-line no-underscore-dangle
+      this.userUnFollow(this.currentUserData._id, this.postUserData._id).then(() => {
+        this.getUser(this.$route.params.id).then((postUser) => {
+          this.postUserData = postUser?.data?.data[0];
+          this.getPosts(this.$route.params.id);
+        });
+      });
+    },
   },
   created() {
-    this.getUser(this.$route.params.id).then((postUserData) => {
-      this.postUserData = postUserData?.data?.data[0];
-      console.log(this.postUserData);
+    this.getUser(this.$route.params.id).then((postUser) => {
+      this.postUserData = postUser?.data?.data[0];
       this.getPosts(this.$route.params.id);
     });
   },
