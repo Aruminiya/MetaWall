@@ -6,8 +6,8 @@
         </router-link>
         <div class="position-relative">
           <div class="user d-flex" @click.stop="isPopPanal = !isPopPanal">
-            <div class="imgContainer mx-1"><img :src="currentUser.photo" alt="userPhoto"></div>
-            <div class="userName"><p class="m-0">{{ currentUser.name }}</p></div>
+            <div class="imgContainer mx-1"><img :src="currentUserData.photo" alt="userPhoto"></div>
+            <div class="userName"><p class="m-0">{{ currentUserData.name }}</p></div>
           </div>
           <div class="popPanal position-absolute end-0"
           :class="{ popPanalActive: isPopPanal }">
@@ -39,7 +39,7 @@ export default {
     };
   },
   props: {
-    currentUser: {
+    currentUserData: {
       type: Object,
       required: true,
     },

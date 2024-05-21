@@ -22,15 +22,19 @@ export default defineStore('usersStore', {
       }
     },
 
+    // 取得使用者
     async getUser(id) {
       try {
         const currentUser = await axios.get(id ? `${import.meta.env.VITE_HOST}/users?_id=${id}` : `${import.meta.env.VITE_HOST}/users?`);
         this.currentUser = currentUser;
+        return currentUser;
       } catch (err) {
         this.errorMessages = err;
+        return err;
       }
     },
 
+    // 登入或註冊
     async loginAndSignup(user, mode) {
       try {
         const loginUser = await axios.post(`${import.meta.env.VITE_HOST}/users/${mode}`, user);
@@ -48,6 +52,7 @@ export default defineStore('usersStore', {
       }
     },
 
+    // 登出
     logout() {
       Cookies.remove('MetaWall_user_token');
       Cookies.remove('MetaWall_user');

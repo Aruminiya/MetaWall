@@ -1,17 +1,19 @@
 <template>
-    <div class="person position-relative d-flex justify-content-between align-items-center mb-5">
+    <div class="person position-relative d-flex mb-5">
         <div class="user position-relative d-flex align-items-center">
             <div class="imgContainer me-3">
-                <img src="https://images.unsplash.com/photo-1600603405959-6d623e92445c?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="userPhoto">
+                <img :src="postUserData?.photo" alt="userPhoto">
             </div>
             <div class="userName">
-                <p class="m-0">張曉明</p>
-                <p class="m-0">198564 人追蹤</p>
+                <p class="m-0">{{postUserData?.name}}</p>
+                <p class="m-0">{{postUserData?.follower.length}} 人追蹤</p>
             </div>
         </div>
-        <div class="follweBtn me-3">
-            <button type="button" class="btn MetaWall_button btnShdow px-4">
-                <span class="text-nowrap">追蹤</span></button>
+        <div class="follweBtn d-flex align-items-center me-3">
+            <button v-if="postUserData?._id !== currentUserData?._id"
+            type="button" class="btn MetaWall_button btnShdow px-4">
+                <span class="text-nowrap">追蹤</span>
+            </button>
         </div>
     </div>
     <PostAreaComponent/>
@@ -19,7 +21,9 @@
 
 <script>
 import { mapActions } from 'pinia';
+import Cookie from 'js-cookie';
 import postsStore from '../stores/postsStore';
+import usersStore from '../stores/usersStore';
 
 import PostAreaComponent from './PostAreaComponent.vue';
 
@@ -28,14 +32,20 @@ export default {
   data() {
     return {
       // eslint-disable-next-line no-underscore-dangle
-      postUserId: this.$route.params.id,
+      postUserData: undefined,
+      currentUserData: JSON.parse(Cookie.get('MetaWall_user')),
     };
   },
   methods: {
     ...mapActions(postsStore, ['getPosts']),
+    ...mapActions(usersStore, ['getUser']),
   },
-  mounted() {
-    this.getPosts(this.postUserId);
+  created() {
+    this.getUser(this.$route.params.id).then((postUserData) => {
+      this.postUserData = postUserData?.data?.data[0];
+      console.log(this.postUserData);
+      this.getPosts(this.$route.params.id);
+    });
   },
 };
 </script>
@@ -66,6 +76,7 @@ export default {
 .imgContainer{
     border-right: solid 2px $MataWall_black;
     width: 80px;
+    height: 100%;
     overflow: hidden;
     img{
       width: 100%;

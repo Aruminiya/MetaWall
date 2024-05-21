@@ -1,5 +1,5 @@
 <template>
-  <NavbarComponent :currentUser="currentUser"/>
+  <NavbarComponent :currentUserData="currentUserData"/>
   <div class="container">
     <div class="row mt-5 h-100 position-relative">
       <div class="col-md-8 col-12">
@@ -11,12 +11,12 @@
             <button class="btn MetaWall_button btnShdow w-100 mt-2" type="button">張貼動態</button>
           </router-link>
           <div class="p-3">
-            <router-link to="/community/postArea"
+            <router-link :to="'/community/postArea/' + currentUserData._id"
              class="panelBtn d-flex align-items-center">
               <div class="imgContainer mx-1 my-2 me-3">
-                  <img :src="currentUser.photo" alt="userPhoto">
+                  <img :src="currentUserData.photo" alt="userPhoto">
               </div>
-              <p class="m-0">{{currentUser.name}}</p>
+              <p class="m-0">{{currentUserData.name}}</p>
             </router-link>
             <router-link to="/community/followList" class="panelBtn d-flex align-items-center">
               <div class="icon imgContainer d-flex justify-content-center
@@ -58,9 +58,9 @@
 </template>
 
 <script>
-import { mapState } from 'pinia';
-import usersStore from '../stores/usersStore';
-
+import { mapActions } from 'pinia';
+import Cookie from 'js-cookie';
+import postsStore from '../stores/postsStore';
 import NavbarComponent from '../components/NavbarComponent.vue';
 
 export default {
@@ -68,10 +68,16 @@ export default {
   data() {
     return {
       postData: [1, 2, 3],
+      currentUserData: JSON.parse(Cookie.get('MetaWall_user')),
     };
   },
-  computed: {
-    ...mapState(usersStore, ['currentUser']),
+
+  methods: {
+    ...mapActions(postsStore, ['getPosts', 'patchPosts']),
+  },
+
+  mounted() {
+    this.getPosts();
   },
 };
 </script>
