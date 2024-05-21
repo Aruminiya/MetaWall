@@ -8,9 +8,18 @@ export default defineStore('likesStore', {
   }),
   actions: {
     // 取得按讚
-    async getLikes(post = undefined) {
+    async getLikes(post = undefined, user = undefined, id = undefined) {
       try {
-        const likes = await axios.get(post ? `${import.meta.env.VITE_HOST}/likes?post=${post}` : `${import.meta.env.VITE_HOST}/likes`);
+        let likes;
+        if (post && user) {
+          likes = await axios.get(`${import.meta.env.VITE_HOST}/likes?post=${post}&user=${user}`);
+        } else if (post) {
+          likes = await axios.get(`${import.meta.env.VITE_HOST}/likes?post=${post}`);
+        } else if (user) {
+          likes = await axios.get(`${import.meta.env.VITE_HOST}/likes?user=${user}`);
+        } else {
+          likes = await axios.get(`${import.meta.env.VITE_HOST}/likes?_id=${id}`);
+        }
         this.likes = likes;
       } catch (err) {
         this.errMessage = err;

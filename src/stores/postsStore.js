@@ -8,7 +8,7 @@ export default defineStore('postsStore', {
   }),
   actions: {
     // 取得貼文
-    async getPosts(userId = undefined, content = undefined, sortOption = 'newToOld') {
+    async getPosts(userId = undefined, content = undefined, sortOption = 'newToOld', id = undefined) {
       try {
         let posts;
         if (userId && content) {
@@ -17,13 +17,17 @@ export default defineStore('postsStore', {
           posts = await axios.get(`${import.meta.env.VITE_HOST}/posts?userId=${userId}&sortOption=${sortOption}`);
         } else if (content) {
           posts = await axios.get(`${import.meta.env.VITE_HOST}/posts?content=${content}&sortOption=${sortOption}`);
+        } else if (id) {
+          posts = await axios.get(`${import.meta.env.VITE_HOST}/posts?_id=${id}`);
         } else {
           posts = await axios.get(`${import.meta.env.VITE_HOST}/posts?sortOption=${sortOption}`);
         }
         this.posts = posts;
-        console.log(posts);
+        console.log(posts, id);
+        return posts;
       } catch (err) {
         this.errMessage = err;
+        return err;
       }
     },
 

@@ -1,6 +1,6 @@
 <template>
   <!-- {{ posts?.data?.data }} -->
-  <section class="userControl d-flex">
+  <section v-if="!this.$route.params.likePostId" class="userControl d-flex">
     <select class="form-select flex-grow-2 custom-select me-3" name="filter"
     v-model="filterOption"
     @change="this.getPosts(this.$route.params.id,searchKeyWord,filterOption)">
@@ -101,6 +101,11 @@ export default {
   computed: {
     ...mapState(postsStore, ['posts']),
     ...mapState(usersStore, ['currentUser']),
+    ...mapState(likesStore, ['likes']),
+    likesPostId() {
+      // eslint-disable-next-line no-underscore-dangle
+      return this.likes?.data?.data[0]?.post._id;
+    },
   },
   methods: {
     ...mapActions(postsStore, ['getPosts', 'patchPosts']),
@@ -123,7 +128,8 @@ export default {
       };
       this.postComments(commentData).then(() => {
         this.$refs.comment[index].value = '';
-        this.getPosts(this.$route.params.id, this.searchKeyWord, this.filterOption);
+        const { likePostId } = this.$route.params;
+        this.getPosts(this.$route.params.id, this.searchKeyWord, this.filterOption, likePostId);
       });
     },
 
@@ -135,19 +141,21 @@ export default {
         const likeData = post.likes.filter((like) => like.user._id === userId);
         // eslint-disable-next-line no-underscore-dangle
         this.deliteLike(likeData[0]._id).then(() => {
-          this.getPosts(this.$route.params.id, this.searchKeyWord, this.filterOption);
+          const { likePostId } = this.$route.params;
+          this.getPosts(this.$route.params.id, this.searchKeyWord, this.filterOption, likePostId);
         });
       } else {
         // 如果我沒按讚 新增按讚並重新渲染資料
         // eslint-disable-next-line no-underscore-dangle
         this.postLike(post._id, userId).then(() => {
-          this.getPosts(this.$route.params.id, this.searchKeyWord, this.filterOption);
+          const { likePostId } = this.$route.params;
+          this.getPosts(this.$route.params.id, this.searchKeyWord, this.filterOption, likePostId);
         });
       }
     },
   },
   created() {
-    this.getPosts();
+    this.getPosts(undefined, undefined, undefined, this.$route.params.likePostId);
   },
 };
 </script>

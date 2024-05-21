@@ -42,6 +42,11 @@ const routes = [
         component: () => import('../components/LikePostsComponent.vue'),
       },
       {
+        path: 'likePosts/:likePostId',
+        name: 'LikePostsShow',
+        component: () => import('../components/LikePostsShowComponent.vue'),
+      },
+      {
         path: 'postArea/:id',
         name: 'PersonlWall',
         component: () => import('../components/PersonlWallComponent.vue'),
