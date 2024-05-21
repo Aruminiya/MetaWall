@@ -25,7 +25,8 @@ export default defineStore('usersStore', {
     // 取得使用者
     async getUser(id) {
       try {
-        const currentUser = await axios.get(id ? `${import.meta.env.VITE_HOST}/users?_id=${id}` : `${import.meta.env.VITE_HOST}/users?`);
+        const currentUser = await axios.get(id ? `${import.meta.env.VITE_HOST}/users?_id=${id}` : `${import.meta.env.VITE_HOST}/users`);
+        console.log(currentUser);
         this.currentUser = currentUser;
         return currentUser;
       } catch (err) {
@@ -39,6 +40,9 @@ export default defineStore('usersStore', {
       try {
         const loginUser = await axios.post(`${import.meta.env.VITE_HOST}/users/${mode}`, user);
         const { token, data } = loginUser.data;
+
+        delete data.following;
+        delete data.follower;
 
         // 如果模式室登入 將 token 存入 cookie，設定有效期為一個禮拜
         if (mode === 'logIn') {
