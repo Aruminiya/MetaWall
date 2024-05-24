@@ -4,7 +4,7 @@
   </section>
   <section>
 
-    <div v-for="like in likes?.data?.data" :key="like._id">
+    <div v-for="(like, index) in likes?.data?.data" :key="like._id">
       <div class="likesPost d-flex justify-content-between
       align-items-center px-3 py-5 mt-3 position-relative">
         <div class="user d-flex align-items-center">
@@ -14,7 +14,7 @@
           <div>
             <div class="userName">{{like?.post?.user?.name}}</div>
             <div class="date d-flex">
-              <span>發文時間：</span><span>{{like?.post?.createdAt}}</span>
+              <span>發文時間：</span><span>{{calculatingLikePostTime[index]}}</span>
             </div>
           </div>
         </div>
@@ -42,10 +42,14 @@ export default {
   data() {
     return {
       currentUserData: JSON.parse(Cookie.get('MetaWall_user')),
+      postTime: '',
     };
   },
   computed: {
     ...mapState(likesStore, ['likes']),
+    calculatingLikePostTime() {
+      return this.likes?.data?.data.map((e) => this.convertToGMT8(e.post.createdAt));
+    },
   },
   methods: {
     ...mapActions(likesStore, ['getLikes', 'deliteLike']),
@@ -54,6 +58,29 @@ export default {
         // eslint-disable-next-line no-underscore-dangle
         this.getLikes(undefined, this.currentUserData._id);
       });
+    },
+
+    // 時間轉換 GTM+8
+    convertToGMT8(isoDate) {
+      // 創建日期對象
+      const date = new Date(isoDate);
+
+      // 獲取 UTC 時間的毫秒數
+      const utcTime = date.getTime() + (date.getTimezoneOffset() * 60000);
+
+      // 轉換為 GMT+8 時區
+      const gmt8Time = new Date(utcTime + (8 * 3600000));
+
+      // 格式化日期和時間
+      const year = gmt8Time.getFullYear();
+      const month = String(gmt8Time.getMonth() + 1).padStart(2, '0');
+      const day = String(gmt8Time.getDate()).padStart(2, '0');
+
+      const hours = String(gmt8Time.getHours()).padStart(2, '0');
+      const minutes = String(gmt8Time.getMinutes()).padStart(2, '0');
+      const seconds = String(gmt8Time.getSeconds()).padStart(2, '0');
+
+      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     },
   },
   created() {
