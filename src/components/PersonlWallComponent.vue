@@ -46,7 +46,9 @@ export default {
     // 檢查該貼文人是否被我追蹤
     isFollowing() {
       // eslint-disable-next-line no-underscore-dangle
-      return this.postUserData?.follower.some((element) => element === this.currentUserData._id);
+      return this.postUserData?.follower
+      // eslint-disable-next-line no-underscore-dangle
+        .some((element) => element.user._id === this.currentUserData._id);
     },
   },
   methods: {
