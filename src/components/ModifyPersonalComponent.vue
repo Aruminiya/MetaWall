@@ -20,43 +20,92 @@
           </div>
 
           <label for="photoFile" class="photoFile m-2 px-4 py-1">上傳大頭照</label>
-          <input id="photoFile" class="d-none" type="file" @change="upLoadimage($event)">
+          <input id="photoFile" class="d-none" type="file" @change="upLoadimage()">
         </div>
         <div class="d-flex flex-column justify-content-center align-items-center">
-          <div>
-            <label for="name" class="my-2">暱稱</label><br>
-            <input id="name" class="MetaWall_input" type="text" placeholder="請輸入暱稱"
-            v-model="modifyAreaData.name">
-            <br>
-            <p class="my-2">性別</p>
-            <label for="male">男性</label>
-            <input id="male" class="mx-1" type="radio" name="gender" value="male"
-            v-model="modifyAreaData.sex">&nbsp;
-            <label for="female">女性</label>
-            <input id="female" class="mx-1" type="radio" name="gender" value="female"
-            v-model="modifyAreaData.sex">&nbsp;
-            <label for="else">其他</label>
-            <input id="else" class="mx-1" type="radio" name="gender" value="else"
-            v-model="modifyAreaData.sex">&nbsp;
-            <br>
-            <button class="btn MetaWall_button btnShdow w-100 my-4 px-4">送出更新</button>
-          </div>
+          <v-form class="d-flex flex-column vForm" v-slot="{ errors }" @submit="editUserBtn()">
+            <label for="name" class="my-2">暱稱</label>
+            <v-field
+                id="name"
+                name="暱稱"
+                type="text"
+                class="MetaWall_input my-1"
+                :class="{ 'is-invalid': errors['暱稱'] }"
+                placeholder="請輸入暱稱" rules="required"
+                v-model="modifyAreaData.name"
+              ></v-field>
+              <error-message name="暱稱" class="invalid-feedback"></error-message>
+
+              <p class="my-2">性別</p>
+              <div>
+                <v-field
+                  id="male"
+                  name="性別"
+                  type="radio"
+                  :class="{ 'is-invalid': errors['性別'] }"
+                  value="male" rules="required"
+                  v-model="modifyAreaData.sex"
+                ></v-field>
+                <label for="male" class="mx-1">男性</label>
+                &emsp;
+                <v-field
+                  id="female"
+                  name="性別"
+                  type="radio"
+                  :class="{ 'is-invalid': errors['性別'] }"
+                  value="female" rules="required"
+                  v-model="modifyAreaData.sex"
+                ></v-field>
+                <label for="female" class="mx-1">女性</label>
+                &emsp;
+                <v-field
+                  id="other"
+                  name="性別"
+                  type="radio"
+                  :class="{ 'is-invalid': errors['性別'] }"
+                  value="other" rules="required"
+                  v-model="modifyAreaData.sex"
+                ></v-field>
+                <label for="other" class="mx-1">其他</label>
+                <error-message name="性別" class="invalid-feedback"></error-message>
+              </div>
+              <error-message name="密碼" class="invalid-feedback"></error-message>
+              <button type="submit" class="btn MetaWall_button
+              btnShdow w-100 my-4 px-4">送出更新</button>
+          </v-form>
         </div>
         {{ modifyAreaData }}
       </form>
       <form v-if="modifyMode==='modifyPassword'" class="modifyPassword m-5">
         <div class="d-flex flex-column justify-content-center align-items-center">
-          <div>
-            <label for="newPassword" class="my-2">輸入新密碼</label><br>
-            <input id="newPassword" class="MetaWall_input px-3 py-2"
-            type="text" placeholder="請輸入新密碼">
-            <br>
-            <label for="checkNewPassword" class="my-2">再次輸入</label><br>
-            <input id="checkNewPassword" class="MetaWall_input px-3 py-2"
-            type="text" placeholder="再次輸入新密碼">
-            <br>
-            <button class="btn MetaWall_button btnShdow w-100 my-4 px-4">重設密碼</button>
-          </div>
+          <v-form class="d-flex flex-column vForm" v-slot="{ errors }" @submit="editPasswordBtn()">
+            <label for="name" class="my-2">請輸入密碼</label>
+            <v-field
+              id="password"
+              name="密碼"
+              type="password"
+              class="MetaWall_input my-1"
+              :class="{ 'is-invalid': errors['密碼'] }"
+              placeholder="請輸入密碼" rules="min:8|required"
+              v-model="editPassword.password"
+            ></v-field>
+            <error-message name="密碼" class="invalid-feedback"></error-message>
+
+            <label for="name" class="my-2">請再次輸入密碼</label>
+            <v-field
+              id="checkPassword"
+              name="檢查密碼"
+              type="password"
+              class="MetaWall_input my-1"
+              :class="{ 'is-invalid': errors['檢查密碼'] }"
+              placeholder="請再次輸入密碼" rules="min:8|required"
+              v-model="checkPassword"
+            ></v-field>
+            <error-message name="檢查密碼" class="invalid-feedback"></error-message>
+              <button type="submit" class="btn MetaWall_button
+              btnShdow w-100 my-4 px-4">送出更新</button>
+              <p class="errorMessage text-center">{{ passwordErrorMessage }}</p>
+          </v-form>
         </div>
       </form>
     </div>
@@ -65,11 +114,39 @@
 
 <script>
 import { mapActions } from 'pinia';
+
+// 把需要的語系 驗證 驗證規則引入
+import * as VeeValidate from 'vee-validate';
+import * as VeeValidateI18n from '@vee-validate/i18n';
+import * as VeeValidateRules from '@vee-validate/rules';
 import Cookie from 'js-cookie';
+import Swal from 'sweetalert2';
 import postsStore from '../stores/postsStore';
 import usersStore from '../stores/usersStore';
 
+// 中文語系 JSON
+import zhTW from '../assets/zh_TW.json';
+// 表單驗證規則全部引入使用
+Object.keys(VeeValidateRules).forEach((rule) => {
+  VeeValidate.defineRule(rule, VeeValidateRules[rule]);
+});
+
+// 讀取外部的資源
+VeeValidateI18n.localize({
+  zhTW,
+});
+// Activate the locale
+VeeValidate.configure({
+  generateMessage: VeeValidateI18n.localize('zhTW'),
+  validateOnInput: true, // 調整為：輸入文字時，就立即進行驗證
+});
+
 export default {
+  components: {
+    VForm: VeeValidate.Form,
+    VField: VeeValidate.Field,
+    ErrorMessage: VeeValidate.ErrorMessage,
+  },
   data() {
     return {
       currentUserData: JSON.parse(Cookie.get('MetaWall_user')),
@@ -79,6 +156,11 @@ export default {
         name: '',
         sex: '',
       },
+      editPassword: {
+        password: '',
+      },
+      checkPassword: '',
+      passwordErrorMessage: '',
     };
   },
   methods: {
@@ -99,6 +181,47 @@ export default {
             Cookie.set('MetaWall_user', JSON.stringify(this.currentUserData), { expires: 7 });
           });
         });
+      }
+    },
+    async editUserBtn() {
+      // eslint-disable-next-line no-underscore-dangle
+      const res = await this.editUser(this.currentUserData._id, this.modifyAreaData);
+      if (res.status === 200) {
+        Swal.fire({
+          icon: 'success',
+          title: '會員編輯成功',
+        }).then(() => {
+          this.$router.push('/community/postArea');
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: '發生錯誤',
+          text: '請稍後嘗試',
+        });
+      }
+    },
+    async editPasswordBtn() {
+      if (this.editPassword.password === this.checkPassword) {
+        this.passwordErrorMessage = '';
+        // eslint-disable-next-line no-underscore-dangle
+        const res = await this.editUser(this.currentUserData._id, this.editPassword);
+        if (res.status === 200) {
+          Swal.fire({
+            icon: 'success',
+            title: '密碼修改成功',
+          }).then(() => {
+            this.$router.push('/community/postArea');
+          });
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: '發生錯誤',
+            text: '請稍後嘗試',
+          });
+        }
+      } else {
+        this.passwordErrorMessage = '檢查密碼不正確';
       }
     },
   },
@@ -150,5 +273,13 @@ export default {
       height: 100%;
       object-fit: cover;
     }
+}
+
+.errorMessage{
+  color: $MataWall_red;
+}
+
+.vForm{
+  width: 250px;
 }
 </style>
