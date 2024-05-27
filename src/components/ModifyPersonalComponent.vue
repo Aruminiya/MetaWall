@@ -74,7 +74,6 @@
               btnShdow w-100 my-4 px-4">送出更新</button>
           </v-form>
         </div>
-        {{ modifyAreaData }}
       </form>
       <form v-if="modifyMode==='modifyPassword'" class="modifyPassword m-5">
         <div class="d-flex flex-column justify-content-center align-items-center">
