@@ -56,6 +56,26 @@ export default defineStore('usersStore', {
       }
     },
 
+    // 編輯會員資料
+    async editUser(userId, editData) {
+      try {
+        const editUserData = await axios.patch(`${import.meta.env.VITE_HOST}/users/${userId}`, editData);
+        return editUserData;
+      } catch (err) {
+        return err;
+      }
+    },
+
+    // 修改密碼
+    async changePassword(userId, newPassword) {
+      try {
+        const toNewPassword = await axios.patch(`${import.meta.env.VITE_HOST}/users/${userId}`, { password: newPassword });
+        return toNewPassword;
+      } catch (err) {
+        return err;
+      }
+    },
+
     // 登出
     logout() {
       Cookies.remove('MetaWall_user_token');

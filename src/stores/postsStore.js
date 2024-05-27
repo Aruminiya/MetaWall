@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { defineStore } from 'pinia';
+import Swal from 'sweetalert2';
 
 export default defineStore('postsStore', {
   state: () => ({
@@ -37,6 +38,37 @@ export default defineStore('postsStore', {
         return await axios.post(`${import.meta.env.VITE_HOST}/posts`, postData);
       } catch (err) {
         this.errMessage = err;
+        return err;
+      }
+    },
+
+    // 上傳圖片至firebase
+    async toUploadPost(selectedFile) {
+      try {
+        console.log(selectedFile);
+        const formData = new FormData();
+        formData.append('image', selectedFile);
+        console.log(formData);
+        const res = await axios.post(`${import.meta.env.VITE_HOST}/upload/file`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        return res;
+      } catch (err) {
+        const errMessage = err.response.data.message;
+        if (errMessage === 'File too large') {
+          Swal.fire({
+            icon: 'error',
+            title: '圖片檔案過大',
+            text: '文件大小上限為 2 MB',
+          });
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: '發生錯誤請重新嘗試',
+          });
+        }
         return err;
       }
     },

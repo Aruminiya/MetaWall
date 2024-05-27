@@ -16,28 +16,33 @@
       <form  v-if="modifyMode==='modifyUser'" class="modifyUser m-5">
         <div class="d-flex flex-column justify-content-center align-items-center">
           <div class="imgContainer mx-1">
-            <img src="https://images.unsplash.com/photo-1585807515950-bc46d934c28b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="userPhoto">
+            <img :src="currentUserData.photo" alt="userPhoto">
           </div>
 
           <label for="photoFile" class="photoFile m-2 px-4 py-1">上傳大頭照</label>
-          <input id="photoFile" class="d-none" type="file">
+          <input id="photoFile" class="d-none" type="file" @change="upLoadimage($event)">
         </div>
         <div class="d-flex flex-column justify-content-center align-items-center">
           <div>
             <label for="name" class="my-2">暱稱</label><br>
-            <input id="name" class="MetaWall_input" type="text" placeholder="請輸入暱稱">
+            <input id="name" class="MetaWall_input" type="text" placeholder="請輸入暱稱"
+            v-model="modifyAreaData.name">
             <br>
             <p class="my-2">性別</p>
             <label for="male">男性</label>
-            <input id="male" class="mx-1" type="radio" name="gender" value="male">&nbsp;
+            <input id="male" class="mx-1" type="radio" name="gender" value="male"
+            v-model="modifyAreaData.sex">&nbsp;
             <label for="female">女性</label>
-            <input id="female" class="mx-1" type="radio" name="gender" value="female">&nbsp;
+            <input id="female" class="mx-1" type="radio" name="gender" value="female"
+            v-model="modifyAreaData.sex">&nbsp;
             <label for="else">其他</label>
-            <input id="else" class="mx-1" type="radio" name="gender" value="else">&nbsp;
+            <input id="else" class="mx-1" type="radio" name="gender" value="else"
+            v-model="modifyAreaData.sex">&nbsp;
             <br>
             <button class="btn MetaWall_button btnShdow w-100 my-4 px-4">送出更新</button>
           </div>
         </div>
+        {{ modifyAreaData }}
       </form>
       <form v-if="modifyMode==='modifyPassword'" class="modifyPassword m-5">
         <div class="d-flex flex-column justify-content-center align-items-center">
@@ -59,11 +64,43 @@
 </template>
 
 <script>
+import { mapActions } from 'pinia';
+import Cookie from 'js-cookie';
+import postsStore from '../stores/postsStore';
+import usersStore from '../stores/usersStore';
+
 export default {
   data() {
     return {
+      currentUserData: JSON.parse(Cookie.get('MetaWall_user')),
+      selectedFile: null,
       modifyMode: 'modifyUser',
+      modifyAreaData: {
+        name: '',
+        sex: '',
+      },
     };
+  },
+  methods: {
+    ...mapActions(postsStore, ['toUploadPost']),
+    ...mapActions(usersStore, ['changePassword', 'editUser']),
+    async upLoadimage(event) {
+      const file = event.target.files[0];
+      if (file) {
+        this.selectedFile = file;
+        console.log(this.selectedFile);
+        this.toUploadPost(this.selectedFile).then((res) => {
+          console.log(res);
+          const newPhoto = res.data.fileUrl;
+          console.log(newPhoto);
+          // eslint-disable-next-line no-underscore-dangle
+          this.editUser(this.currentUserData._id, { photo: newPhoto }).then(() => {
+            this.currentUserData.photo = newPhoto;
+            Cookie.set('MetaWall_user', JSON.stringify(this.currentUserData), { expires: 7 });
+          });
+        });
+      }
+    },
   },
 };
 
